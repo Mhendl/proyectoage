@@ -1,0 +1,8 @@
+# Clave de API local — NO versionar
+config.js
+
+# Sistema / editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Age of Empires II DE — Guía de Counters</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#0f0c08; --bg2:#1c1610; --bg3:#26190f;
+      --border:#50381c; --border2:#7a5a28;
+      --gold:#d4a520; --gold-dim:#a07c18;
+      --text:#ead5a0; --dim:#a08860;
+      --gbg:#0a2208; --gfg:#60c060;
+      --rbg:#280a08; --rfg:#e06868;
+    }
+    body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; font-size:14px; line-height:1.4; min-height:100vh; }
+
+    header { background:linear-gradient(180deg,#2a1e0c 0%,var(--bg) 100%); border-bottom:2px solid var(--gold); padding:28px 20px 18px; text-align:center; }
+    header h1 { font-size:clamp(1.4rem,4vw,2.4rem); color:var(--gold); letter-spacing:4px; text-transform:uppercase; text-shadow:0 0 24px rgba(200,168,75,.4); }
+    header p { color:var(--dim); margin-top:5px; font-size:.82rem; letter-spacing:2px; }
+
+    .sticky-top { position:sticky; top:0; z-index:300; }
+    nav { background:var(--bg2); border-bottom:1px solid var(--border); display:flex; justify-content:center; flex-wrap:wrap; }
+    nav button { background:none; border:none; border-bottom:3px solid transparent; color:var(--dim); cursor:pointer; font-size:.86rem; letter-spacing:1px; padding:12px 20px; text-transform:uppercase; transition:color .15s,border-color .15s,background .15s; }
+    nav button:hover { color:var(--gold); background:#2a1e0a; }
+    nav button.active { color:var(--gold); border-bottom-color:var(--gold); }
+
+    .global-search-bar { background:#180f06; border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px; }
+    .gsb-inner { position:relative; flex:1; max-width:480px; }
+    .gsb-icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); color:#4a6a4c; font-size:.95rem; pointer-events:none; }
+    #global-input { width:100%; background:var(--bg3); border:1px solid var(--border2); border-radius:6px; color:var(--text); font-size:.9rem; outline:none; padding:8px 36px; transition:border-color .2s,box-shadow .2s; }
+    #global-input::placeholder { color:#4a6a4c; }
+    #global-input:focus { border-color:var(--gold-dim); box-shadow:0 0 0 2px rgba(200,168,75,.15); }
+    .gsb-clear { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--dim); cursor:pointer; font-size:1rem; padding:2px; display:none; }
+    .gsb-clear:hover { color:var(--rfg); }
+    #global-input:not(:placeholder-shown) ~ .gsb-clear { display:block; }
+    #gsb-info { color:var(--dim); font-size:.82rem; white-space:nowrap; }
+
+    main { max-width:1440px; margin:0 auto; padding:22px 14px 60px; }
+    .section { display:none; }
+    .section.active { display:block; }
+    .section-title { color:var(--gold); font-size:1.15rem; letter-spacing:3px; text-transform:uppercase; margin-bottom:18px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+
+    #search-results { display:none; }
+    #search-results.active { display:block; }
+    .sr-cat-title { color:var(--dim); font-size:.78rem; letter-spacing:2.5px; text-transform:uppercase; margin:22px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+    .sr-cat-title span { padding:2px 10px; border-radius:10px; font-size:.72rem; font-weight:700; letter-spacing:1px; }
+    .sr-empty { text-align:center; padding:60px 20px; color:var(--dim); font-size:.95rem; letter-spacing:1px; }
+
+    .unit-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px; }
+
+    .card { background:var(--bg3); border:1px solid var(--border); border-radius:8px; overflow:hidden; transition:border-color .2s,box-shadow .2s; display:flex; flex-direction:column; }
+    .card:hover { border-color:var(--gold-dim); box-shadow:0 4px 20px rgba(0,0,0,.5); }
+
+    .card-head { background:linear-gradient(135deg,#2e1e0a,#1c1208); padding:10px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); }
+    .card-img { width:44px; height:44px; border-radius:4px; border:1px solid var(--border2); object-fit:contain; background:#0b1a0c; flex-shrink:0; image-rendering:auto; }
+    .card-ph { width:48px; height:48px; border-radius:4px; border:1px dashed var(--border2); background:#0b1a0c; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
+    .card-title-block { flex:1; min-width:0; }
+    .card-name { font-size:.98rem; font-weight:700; color:var(--gold); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .badges { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+    .badge { font-size:.65rem; letter-spacing:.8px; padding:1px 7px; border-radius:20px; text-transform:uppercase; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+    .badge-civ { background:#1f3822; border:1px solid var(--gold-dim); color:var(--gold); }
+    .badge-civ img { width:16px; height:16px; border-radius:2px; object-fit:cover; flex-shrink:0; }
+    .badge-note { background:#1a2510; border:1px solid #4a6a2c; color:#8aaa5c; font-size:.6rem; }
+
+    .upgrades { display:flex; flex-wrap:wrap; align-items:center; gap:4px; padding:7px 14px; background:#160e06; border-bottom:1px solid var(--border); }
+    .upg { background:#2a1e0a; color:var(--dim); font-size:.68rem; padding:3px 9px; border-radius:3px; border:1px solid transparent; cursor:pointer; transition:all .15s; font-family:inherit; }
+    .upg:hover { background:#3a2c10; color:var(--text); }
+    .upg.elite { background:#3a2a0c; color:var(--gold); }
+    .upg.active { background:#4a3810; color:var(--gold); border-color:var(--gold); box-shadow:0 0 6px rgba(212,165,32,.3); }
+    .arr { color:var(--border2); font-size:.72rem; }
+
+    .stats { display:flex; flex-wrap:wrap; gap:5px; padding:8px 14px; border-bottom:1px solid var(--border); }
+    .st { display:flex; flex-direction:column; align-items:center; background:#120c06; border:1px solid var(--border); border-radius:5px; padding:3px 8px; min-width:48px; }
+    .st-l { font-size:.56rem; color:#806040; text-transform:uppercase; letter-spacing:.8px; }
+    .st-v { font-size:.86rem; font-weight:700; color:var(--text); }
+    .st-v.fast { color:var(--gfg); }
+    .st-v.slow { color:var(--rfg); }
+    .st-v.gold { color:var(--gold); font-size:.72rem; }
+
+    .counters { padding:9px 14px; display:flex; flex-direction:column; gap:7px; flex:1; }
+    .ctr-label { font-size:.66rem; letter-spacing:1.2px; text-transform:uppercase; font-weight:700; margin-bottom:3px; }
+    .ctr-label.strong { color:var(--gfg); }
+    .ctr-label.weak { color:var(--rfg); }
+    .tags { display:flex; flex-wrap:wrap; gap:3px; }
+    .tag { font-size:.68rem; padding:2px 7px; border-radius:10px; }
+    .tag.s { background:var(--gbg); color:var(--gfg); border:1px solid #1f4a20; }
+    .tag.w { background:var(--rbg); color:var(--rfg); border:1px solid #4a1f1f; }
+
+    .animals-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    thead th { background:#2a1e08; color:var(--gold); letter-spacing:1.5px; padding:10px 14px; text-align:left; text-transform:uppercase; border-bottom:2px solid var(--gold-dim); }
+    tbody td { padding:8px 14px; border-bottom:1px solid var(--border); }
+    tbody tr:hover td { background:#162a18; }
+    .group-row td { background:#0f1e10; color:var(--dim); font-size:.75rem; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border-top:1px solid var(--border2); }
+    .food-val { color:var(--gold); font-weight:700; }
+    .inedible-val { color:var(--rfg); }
+
+    footer { text-align:center; padding:20px; color:#3d5e3f; font-size:.78rem; border-top:1px solid var(--border); margin-top:40px; }
+
+    /* ── Tech Tree ── */
+    .tt-bar { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-bottom:14px; }
+    .tt-bar label { color:var(--dim); font-size:.82rem; letter-spacing:1px; text-transform:uppercase; }
+    #tt-civ { background:var(--bg3); border:1px solid var(--border2); border-radius:6px; color:var(--text); font-size:.95rem; padding:8px 12px; outline:none; min-width:220px; cursor:pointer; }
+    #tt-civ:focus { border-color:var(--gold); }
+    .tt-note { color:var(--dim); font-size:.78rem; }
+    .tt-frame-wrap { border:1px solid var(--border2); border-radius:8px; overflow:hidden; background:#fff; }
+    #tt-frame { width:100%; height:78vh; min-height:560px; border:0; display:block; }
+    .tt-civ-info { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:14px 16px; margin-bottom:14px; }
+    .tt-civ-info h3 { color:var(--gold); font-size:1.05rem; margin-bottom:8px; }
+    .tt-civ-info .row { margin:5px 0; font-size:.86rem; }
+    .tt-civ-info .row b { color:var(--gold-dim); }
+    .tt-tags-uu { color:#8ec98e; } .tt-tags-lack { color:var(--rfg); }
+
+    /* ── Asistente IA ── */
+    #ai-fab { position:fixed; bottom:22px; right:22px; z-index:500; width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold-dim)); border:2px solid #f0d878; color:#1a1206; font-size:1.6rem; cursor:pointer; box-shadow:0 6px 22px rgba(0,0,0,.55); transition:transform .15s,box-shadow .2s; display:flex; align-items:center; justify-content:center; }
+    #ai-fab:hover { transform:scale(1.08); box-shadow:0 8px 30px rgba(212,165,32,.45); }
+    #ai-panel { position:fixed; bottom:90px; right:22px; z-index:500; width:min(420px,calc(100vw - 28px)); height:min(620px,calc(100vh - 130px)); background:var(--bg2); border:1px solid var(--border2); border-radius:12px; box-shadow:0 12px 48px rgba(0,0,0,.7); display:none; flex-direction:column; overflow:hidden; }
+    #ai-panel.open { display:flex; }
+    .ai-head { background:linear-gradient(135deg,#2e1e0a,#1c1208); padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    .ai-head .ai-title { flex:1; color:var(--gold); font-weight:700; letter-spacing:1px; font-size:.95rem; }
+    .ai-head button { background:none; border:none; color:var(--dim); cursor:pointer; font-size:1.1rem; padding:4px 6px; border-radius:4px; }
+    .ai-head button:hover { color:var(--gold); background:#ffffff14; }
+    .ai-msgs { flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; }
+    .ai-msg { padding:9px 13px; border-radius:12px; font-size:.88rem; line-height:1.5; max-width:88%; white-space:pre-wrap; word-wrap:break-word; }
+    .ai-msg.user { align-self:flex-end; background:#3a2c10; color:var(--text); border:1px solid var(--border2); border-bottom-right-radius:3px; }
+    .ai-msg.bot { align-self:flex-start; background:var(--bg3); color:var(--text); border:1px solid var(--border); border-bottom-left-radius:3px; }
+    .ai-msg.bot b, .ai-msg.bot strong { color:var(--gold); }
+    .ai-msg.sys { align-self:center; background:transparent; color:var(--dim); font-size:.8rem; text-align:center; max-width:100%; }
+    .ai-msg.err { align-self:center; background:var(--rbg); color:var(--rfg); border:1px solid #4a1f1f; font-size:.82rem; max-width:100%; }
+    .ai-suggest { display:flex; flex-wrap:wrap; gap:6px; padding:0 14px 8px; }
+    .ai-suggest button { background:var(--bg3); border:1px solid var(--border); color:var(--dim); font-size:.74rem; padding:5px 10px; border-radius:14px; cursor:pointer; font-family:inherit; }
+    .ai-suggest button:hover { border-color:var(--gold-dim); color:var(--gold); }
+    .ai-input-bar { border-top:1px solid var(--border); padding:10px; display:flex; gap:8px; align-items:flex-end; }
+    #ai-input { flex:1; background:var(--bg3); border:1px solid var(--border2); border-radius:8px; color:var(--text); font-family:inherit; font-size:.88rem; padding:9px 11px; outline:none; resize:none; max-height:110px; }
+    #ai-input:focus { border-color:var(--gold-dim); }
+    #ai-send { background:var(--gold); border:none; border-radius:8px; color:#1a1206; font-weight:700; cursor:pointer; padding:9px 14px; font-size:.95rem; }
+    #ai-send:disabled { opacity:.4; cursor:default; }
+    .ai-settings { padding:14px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; }
+    .ai-settings label { color:var(--dim); font-size:.78rem; letter-spacing:.5px; }
+    .ai-settings input, .ai-settings select { background:var(--bg3); border:1px solid var(--border2); border-radius:6px; color:var(--text); font-family:inherit; font-size:.86rem; padding:8px 10px; outline:none; width:100%; }
+    .ai-settings input:focus { border-color:var(--gold); }
+    .ai-settings .hint { color:#7a6440; font-size:.74rem; line-height:1.5; }
+    .ai-settings a { color:var(--gold-dim); }
+    .ai-settings .save-btn { background:var(--gold); border:none; border-radius:6px; color:#1a1206; font-weight:700; cursor:pointer; padding:9px; font-size:.88rem; }
+    .ai-typing { align-self:flex-start; color:var(--dim); font-size:.82rem; font-style:italic; }
+
+    @media (max-width:520px) { header h1 { letter-spacing:2px; } nav button { padding:10px 11px; font-size:.76rem; } .unit-grid { grid-template-columns:1fr; } #tt-frame { height:70vh; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Age of Empires II: Definitive Edition</h1>
+  <p>Guía de Counters &amp; Unidades — Todas las Expansiones</p>
+</header>
+
+<div class="sticky-top">
+  <nav id="nav">
+    <button class="active" data-tab="infantry">⚔ Infantería</button>
+    <button data-tab="cavalry">🐴 Caballería</button>
+    <button data-tab="archers">🏹 Arqueros</button>
+    <button data-tab="siege">💣 Asedio</button>
+    <button data-tab="naval">⚓ Naval</button>
+    <button data-tab="animals">🐗 Animales</button>
+    <button data-tab="techtree">🌳 Tech Tree</button>
+  </nav>
+  <div class="global-search-bar">
+    <div class="gsb-inner">
+      <span class="gsb-icon">🔍</span>
+      <input id="global-input" type="text" placeholder="Buscar en todas las categorías..." oninput="globalSearch(this.value)" onkeydown="if(event.key==='Escape')clearSearch()">
+      <button class="gsb-clear" onclick="clearSearch()">✕</button>
+    </div>
+    <span id="gsb-info"></span>
+  </div>
+</div>
+
+<main>
+  <section id="search-results"></section>
+  <section id="infantry"  class="section active"><h2 class="section-title">⚔ Infantería</h2><div class="unit-grid" id="infantry-grid"></div></section>
+  <section id="cavalry"   class="section"><h2 class="section-title">🐴 Caballería</h2><div class="unit-grid" id="cavalry-grid"></div></section>
+  <section id="archers"   class="section"><h2 class="section-title">🏹 Arqueros y Unidades a Distancia</h2><div class="unit-grid" id="archers-grid"></div></section>
+  <section id="siege"     class="section"><h2 class="section-title">💣 Unidades de Asedio</h2><div class="unit-grid" id="siege-grid"></div></section>
+  <section id="naval"     class="section"><h2 class="section-title">⚓ Unidades Navales</h2><div class="unit-grid" id="naval-grid"></div></section>
+  <section id="techtree" class="section">
+    <h2 class="section-title">🌳 Tech Tree — Árbol Tecnológico</h2>
+    <div class="tt-bar">
+      <span class="tt-note">Árbol oficial completo de <a href="https://aoe2techtree.net" target="_blank" style="color:var(--gold-dim)">aoe2techtree.net</a> (MIT), en español. Elegí la civilización en el panel de la izquierda del árbol. · requiere conexión</span>
+    </div>
+    <div class="tt-frame-wrap">
+      <iframe id="tt-frame" title="Tech Tree" loading="lazy"></iframe>
+    </div>
+  </section>
+  <section id="animals"   class="section">
+    <h2 class="section-title">🐗 Animales &amp; Recursos</h2>
+    <div class="animals-wrap">
+      <table><thead><tr><th>Animal</th><th>Cazadores rec.</th><th>Comida</th><th>Tipo</th></tr></thead>
+      <tbody id="animals-tbody"></tbody></table>
+    </div>
+  </section>
+</main>
+<footer>Age of Empires II: Definitive Edition — Datos basados en AoE2HD Strength &amp; Weakness Spreadsheet · Tech Tree por aoe2techtree.net</footer>
+
+<!-- ═══════ ASISTENTE IA ═══════ -->
+<button id="ai-fab" onclick="toggleAI()" title="Asistente IA">🤖</button>
+<div id="ai-panel">
+  <div class="ai-head">
+    <span style="font-size:1.2rem">🤖</span>
+    <span class="ai-title">Asistente AoE2</span>
+    <button onclick="openAISettings()" title="Configuración">⚙</button>
+    <button onclick="toggleAI()" title="Cerrar">✕</button>
+  </div>
+  <div id="ai-body" style="display:flex;flex-direction:column;flex:1;min-height:0;">
+    <div class="ai-msgs" id="ai-msgs"></div>
+    <div class="ai-suggest" id="ai-suggest"></div>
+    <div class="ai-input-bar">
+      <textarea id="ai-input" rows="1" placeholder="Preguntá algo sobre AoE2..." onkeydown="aiInputKey(event)" oninput="aiAutogrow(this)"></textarea>
+      <button id="ai-send" onclick="aiSend()">➤</button>
+    </div>
+  </div>
+  <div class="ai-settings" id="ai-settings" style="display:none;">
+    <label for="ai-key">API Key de Anthropic</label>
+    <input id="ai-key" type="password" placeholder="sk-ant-...">
+    <label for="ai-model">Modelo</label>
+    <select id="ai-model">
+      <option value="claude-sonnet-4-6">Claude Sonnet 4.6 (rápido y económico)</option>
+      <option value="claude-opus-4-8">Claude Opus 4.8 (más potente)</option>
+      <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (el más barato)</option>
+    </select>
+    <button class="save-btn" onclick="saveAISettings()">Guardar</button>
+    <p class="hint">Tu clave se guarda solo en este navegador (localStorage) y se envía directo a la API de Anthropic. Conseguí una en <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>.<br><br>El asistente conoce todas las unidades, counters y civilizaciones de esta página.</p>
+  </div>
+</div>
+
+<!-- Clave de API local (no versionada). Si no existe, el chat la pide en ⚙. -->
+<script src="config.js"></script>
+<script>
+const IMG = "imagenes/";
+const CATS = {
+  infantry:{ label:"⚔ Infantería", color:"#c0522a", bg:"#2a1108" },
+  cavalry: { label:"🐴 Caballería", color:"#4a8abf", bg:"#0a1a2a" },
+  archers: { label:"🏹 Arqueros",   color:"#5aaf5a", bg:"#0a2010" },
+  siege:   { label:"💣 Asedio",     color:"#c09a2a", bg:"#2a2008" },
+  naval:   { label:"⚓ Naval",       color:"#2aaabf", bg:"#082028" },
+};
+const CIV_IMGS = {
+  "Mesoamérica":null,
+  "Aztecas":"Aztecs_AoE2.webp","Vikingos":"Vikings_AoE2.webp","Japoneses":"Japanese_AoE2.webp",
+  "Teutones":"Teutons_AoE2.webp","Eslavos":"Slavs_AoE2.webp","Sarracenos":"Saracens_AoE2.webp",
+  "Celtas":"Celts_AoE2.webp","Francos":"Franks_AoE2.webp","Godos":"Goths_AoE2.webp",
+  "Incas":"Incas_AoE2.webp","Italianos":"Italians_AoE2.webp","Etíopes":"Ethiopians_AoE2.webp",
+  "Malienses":"Malians_AoE2.webp","Persas":"Persians_AoE2.webp","Bizantinos":"Byzantines_AoE2.webp",
+  "Españoles":"Spanish_AoE2.webp","Indios":"Hindustanis_AoE2.webp","Chinos":"Chinese_AoE2.webp",
+  "Turcos":"Turks_AoE2.webp","Británicos":"Britons_AoE2.webp","Mongoles":"Mongols_AoE2.webp",
+  "Mayas":"Mayans_AoE2.webp","Coreanos":"Koreans_AoE2.webp","Portugueses":"Portuguese_AoE2.webp",
+  "Bereberes":"Berbers_AoE2.webp","Burgondios":"Burgundians_AoE2.webp","Sicilianos":"Sicilians_AoE2.webp",
+  "Gurjaras":"Gurjaras_AoE2.webp","Bengalíes":"Bengalis_AoE2.webp","Magiares":"Magyars_AoE2.webp",
+  "Armenios":"Armenians_AoE2.webp","Jurchens":"Jurchens_AoE2.webp","Hunos":"Huns_AoE2.webp",
+  "Cumanos":"Cumans_AoE2.webp","Mapuche":"Mapuche_AoE2.webp","Vietnamitas":"Vietnamese_AoE2.webp",
+  "Bohemios":"Bohemians_AoE2.webp","Dravidios":"Dravidians_AoE2.webp","Muisca":"Muisca_AoE2.webp",
+  "Tupi":"Tupi_AoE2.webp","Búlgaros":"Bulgarians_AoE2.webp","Jemeres":"Khmer_AoE2.webp",
+  "Birmanos":"Burmese_AoE2.webp","Malayos":"Malay_AoE2.webp","Georgianos":"Georgians_AoE2.webp",
+  "Lituanos":"Lithuanians_AoE2.webp","Polacos":"Poles_AoE2.webp","Tártaros":"Tatars_AoE2.webp",
+  "Romanos":"Romans_AoE2.webp","SE Asia":"Khmer_AoE2.webp",
+};
+
+// ═══════ INFANTERÍA ═══════
+const infantry = [
+  { name:"Línea Milicia", civ:null, img:"Champion_aoe2DE.webp", cost:"60A 20O",
+    units:[
+      {name:"Milicia",               hp:40,  atk:4,  arm:0, pie:1, spd:"Lenta", img:"MilitiaDE.webp",
+       strong:["Escaramuzadores","Caballería Exploradora"],
+       weak:  ["Arqueros","Escorpiones","Cav. Archers","Catafractos","Guerreros Jaguar","Boyardos","Art. de Mano","Conquistador","Jenízaro","Hondero","Caballero Teutónico","Prácticamente todo"]},
+      {name:"Hombre de Armas",       hp:45,  atk:6,  arm:0, pie:1, spd:"Lenta", img:"Manatarms_aoe2DE.webp",
+       strong:["Escaramuzadores","Caballería Exploradora","Explorador Águila"],
+       weak:  ["Arqueros","Escorpiones","Cav. Archers","Catafractos","Guerreros Jaguar","Boyardos","Art. de Mano","Conquistador","Jenízaro","Hondero","Caballero Teutónico"]},
+      {name:"Espadachín",            hp:60,  atk:9,  arm:0, pie:1, spd:"Lenta", img:"Longswordsman_aoe2DE.webp",
+       strong:["Escaramuzadores","Camellos","Guerreros Águila","Edificios","Caballería Ligera","Piqueros"],
+       weak:  ["Arqueros","Escorpiones","Cav. Archers","Catafractos","Boyardos","Art. de Mano","Conquistador","Jenízaro","Hondero","Caballero Teutónico"]},
+      {name:"Espadachín a Dos Manos",hp:60,  atk:12, arm:0, pie:1, spd:"Lenta", img:"Twohanded_aoe2DE.webp",
+       strong:["Escaramuzadores","Alabarderos","Camellos","Guerreros Águila","Edificios","Caballería Ligera","Piqueros"],
+       weak:  ["Arqueros","Escorpiones","Cav. Archers","Catafractos","Art. de Mano","Conquistador","Jenízaro","Caballero Teutónico"]},
+      {name:"Campeón",               hp:70,  atk:13, arm:1, pie:1, spd:"Lenta", img:"Champion_aoe2DE.webp",
+       strong:["Escaramuzadores","Alabarderos","Camellos","Guerreros Águila","Edificios","Caballería Ligera","Guerreros Jaguar","Piqueros"],
+       weak:  ["Arqueros","Escorpiones","Cav. Archers","Art. de Mano","Conquistador","Jenízaro","Caballero Teutónico"]},
+    ],
+    strong:["Escaramuzadores","Alabarderos","Camellos","Guerreros Águila","Edificios","Caballería Ligera"],
+    weak:  ["Arqueros","Escorpiones","Cav. Archers","Art. de Mano","Conquistador","Jenízaro","Caballero Teutónico"]},
+
+  { name:"Línea Lancero", civ:null, img:"Halberdier_aoe2DE.webp", cost:"35A 25M",
+    units:[
+      {name:"Lancero",   hp:45, atk:3, arm:0, pie:0, spd:"Media", img:"Spearman_aoe2DE.webp",
+       strong:["Caballería Ligera","Caballería Exploradora"],
+       weak:  ["Arqueros","Escorpiones","Catafractos","Art. de Mano","Jenízaro","Infantería","Honderos"]},
+      {name:"Piquero",   hp:55, atk:4, arm:0, pie:0, spd:"Media", img:"Aoe2-infantry-2-pikeman.webp",
+       strong:["Toda la caballería","Mameluco","Catafracto (sin bono)"],
+       weak:  ["Arqueros","Escorpiones","Catafractos (bono inverso)","Art. de Mano","Jenízaro","Honderos"]},
+      {name:"Alabardero",hp:60, atk:6, arm:0, pie:0, spd:"Media", img:"Halberdier_aoe2DE.webp",
+       strong:["Toda la caballería","Elefantes de Batalla","Elefantes de Guerra","Camellos","War Elephants"],
+       weak:  ["Arqueros","Escorpiones","Art. de Mano","Jenízaro","Honderos","Monjes"]},
+    ],
+    strong:["Caballería en general"],
+    weak:  ["Arqueros","Escorpiones","Art. de Mano","Jenízaro","Honderos"]},
+
+  { name:"Línea Águila", civ:"Mesoamérica", img:"Eaglescout_aoe2DE.webp", cost:"20A 50O",
+    units:[
+      {name:"Explorador Águila",     hp:50, atk:4, arm:0, pie:2, spd:"Rápida", img:"Eaglescout_aoe2DE.webp",
+       strong:["Escaramuzadores","Caballería Exploración"],
+       weak:  ["Catafractos","Art. de Mano","Jenízaros","Infantería melee","Honderos"]},
+      {name:"Guerrero Águila",       hp:55, atk:7, arm:0, pie:3, spd:"Rápida", img:"Eaglescout_aoe2DE.webp",
+       strong:["Escaramuzadores","Caballería","Cav. Archers","Arqueros","Monjes"],
+       weak:  ["Catafractos","Boyardos","Art. de Mano","Jenízaros","Infantería melee","Honderos"]},
+      {name:"Guerrero Águila Élite", hp:60, atk:9, arm:0, pie:4, spd:"Rápida", img:"Eaglescout_aoe2DE.webp",
+       strong:["Escaramuzadores","Caballería","Cav. Archers","Arqueros","Monjes","Caballería Ligera"],
+       weak:  ["Catafractos","Art. de Mano","Jenízaros","Infantería melee","Honderos"]},
+    ],
+    strong:["Escaramuzadores","Caballería","Arqueros de Caballería","Arqueros","Monjes"],
+    weak:  ["Catafractos","Boyardos","Artilleros de Mano","Jenízaros","Infantería melee","Honderos"]},
+
+  { name:"Merodeador Woad", civ:"Celtas", img:"WoadRaiderIcon-TTK.webp",
+    units:[
+      {name:"Merodeador Woad",       hp:65, atk:8,  arm:0, pie:1, spd:"Rápida"},
+      {name:"Merodeador Woad Élite", hp:80, atk:13, arm:0, pie:1, spd:"Rápida", cost:"65A 25O"},
+    ],
+    strong:["Escaramuzadores","Alabarderos","Guerreros Águila","Asedio","Arqueros","Edificios","Caballería Ligera","Huscarl"],
+    weak:  ["Arqueros de Caballería","Guerreros Jaguar","Artillero de Mano","Conquistador","Jenízaro","Hondero","Arquero Emplumado","Samurái","Berserker","Caballero Teutónico"]},
+
+  { name:"Lanzador de Hacha", civ:"Francos", img:"ThrowingAxemanIcon-DE.webp",
+    units:[
+      {name:"Lanzador de Hacha",       hp:50, atk:7, rng:3, arm:0, pie:0, spd:"Lenta"},
+      {name:"Lanzador de Hacha Élite", hp:60, atk:8, rng:4, arm:1, pie:0, spd:"Lenta", cost:"55A 25O"},
+    ],
+    strong:["Escaramuzadores","Alabarderos","Guerreros Águila","Arietes de Asedio","Trabucos","Edificios","Caballería Ligera","Huscarl"],
+    weak:  ["Arqueros","Arqueros de Caballería","Guerreros Jaguar","Artillero de Mano","Conquistador","Jenízaro","Hondero","Boyardo","Catafracto","Samurái","Caballero Teutónico"]},
+
+  { name:"Huscarl", civ:"Godos", img:"EliteHuskarlIcon-DE.webp",
+    units:[
+      {name:"Huscarl",       hp:60, atk:10, arm:0, pie:6, spd:"Media"},
+      {name:"Huscarl Élite", hp:70, atk:12, arm:0, pie:8, spd:"Media", cost:"52A 26O"},
+    ],
+    strong:["Escaramuzadores","Edificios","Arqueros a pie"],
+    weak:  ["Arqueros de Caballería","Boyardo","Artillero de Mano","Conquistador","Jenízaro","Hondero","Caballería melee"]},
+
+  { name:"Samurái", civ:"Japoneses", img:"SamuraiIcon-DE.webp",
+    units:[
+      {name:"Samurái",       hp:60, atk:8,  arm:1, pie:1, spd:"Media"},
+      {name:"Samurái Élite", hp:80, atk:12, arm:1, pie:1, spd:"Media", cost:"60A 30O"},
+    ],
+    strong:["Casi todas las unidades únicas melee","Unidades únicas a distancia","Asedio (cerca)","Edificios","Guerreros Águila"],
+    weak:  ["Arqueros de Caballería","Mangonales","Artillero de Mano","Conquistador","Jenízaro","Hondero","Caballeros"]},
+
+  { name:"Caballero Teutónico", civ:"Teutones", img:"TeutonicKnightIcon-DE.webp",
+    units:[
+      {name:"Caballero Teutónico",       hp:80,  atk:12, arm:5,  pie:2, spd:"Muy Lenta"},
+      {name:"Caballero Teutónico Élite", hp:100, atk:17, arm:10, pie:2, spd:"Muy Lenta", cost:"85A 40O"},
+    ],
+    strong:["Escaramuzadores (cerca)","Casi todas las unidades melee","Asedio (cerca)","Edificios"],
+    weak:  ["Arqueros","Escorpiones","Arqueros de Caballería","Mangonales","Artillero de Mano","Conquistador","Jenízaro","Monjes","Chu Ko Nu"]},
+
+  { name:"Berserker", civ:"Vikingos", img:"BerserkIcon-DE.webp",
+    units:[
+      {name:"Berserker",       hp:54, atk:9,  arm:0, pie:1, spd:"Media"},
+      {name:"Berserker Élite", hp:62, atk:14, arm:2, pie:1, spd:"Media", cost:"65A 25O"},
+    ],
+    strong:["Escaramuzadores","Alabarderos","Camellos","Guerreros Águila","Asedio (cerca)","Edificios","Arqueros","Caballeros (con Chieftains)","Caballería Ligera"],
+    weak:  ["Mangonales","Catafractos","Guerreros Jaguar","Boyardo","Artillero de Mano","Conquistador","Jenízaro","Hondero","Samurái","Caballero Teutónico"]},
+
+  { name:"Guerrero Jaguar", civ:"Aztecas", img:"JaguarWarriorIcon-DE.webp",
+    units:[
+      {name:"Guerrero Jaguar",       hp:50, atk:10, arm:1, pie:1, spd:"Media"},
+      {name:"Guerrero Jaguar Élite", hp:75, atk:12, arm:2, pie:1, spd:"Media", cost:"60A 30O"},
+    ],
+    strong:["Escaramuzadores","Casi toda la infantería (ex. Samurái/Caballero Teutónico)","Asedio (cerca)","Edificios"],
+    weak:  ["Arqueros","Escorpiones","Arqueros de Caballería","Mangonales","Catafractos","Boyardo","Artillero de Mano","Conquistador","Samurái","Caballero Teutónico"]},
+
+  { name:"Kamayuk", civ:"Incas", img:"KamayukIcon-TTK.webp",
+    units:[
+      {name:"Kamayuk",       hp:60, atk:7, arm:0, pie:0, spd:"Lenta"},
+      {name:"Kamayuk Élite", hp:80, atk:8, arm:1, pie:0, spd:"Lenta", cost:"60A 30O"},
+    ],
+    strong:["Escaramuzadores","Caballería","Arqueros de Caballería","Asedio (cerca)"],
+    weak:  ["Arqueros","Escorpiones","Mangonales","Guerreros Jaguar","Artillero de Mano","Jenízaro","Monjes","Samurái","Hondero","Caballero Teutónico"]},
+
+  { name:"Condotiero", civ:"Italianos", img:"CondottieroIcon-DE.webp",
+    units:[{name:"Condotiero", hp:80, atk:10, arm:1, pie:1, spd:"Media/Rápida", cost:"50A 35O"}],
+    strong:["Escaramuzadores","Artillero de Mano","Conquistador","Jenízaro","Hondero","Asedio (cerca)","Torre de Bombardeo"],
+    weak:  ["Arqueros","Escorpiones","Arqueros de Caballería","Mangonales","Boyardo","Caballero Teutónico","Samurái","Guerreros Águila"]},
+
+  { name:"Guerrero Shotel", civ:"Etíopes", img:"ShotelWarriorIcon-TTK.webp",
+    units:[
+      {name:"Guerrero Shotel",       hp:40, atk:16, arm:0, pie:0, spd:"Rápida"},
+      {name:"Guerrero Shotel Élite", hp:50, atk:18, arm:0, pie:1, spd:"Rápida", cost:"50A 35O"},
+    ],
+    strong:["Escaramuzadores","Lanceros","Arietes","Caballería Exploradora / Húsar","Asedio (cerca)"],
+    weak:  ["Línea Milicia","Arqueros de Caballería","Escorpiones","Mangonales","Artillero de Mano","Caballería Pesada","Unidades únicas melee"]},
+
+  { name:"Gbeto", civ:"Malienses", img:"GbetoIcon-TTK.webp",
+    units:[
+      {name:"Gbeto",       hp:30, atk:10, rng:5, arm:0, pie:0, spd:"Rápida"},
+      {name:"Gbeto Élite", hp:45, atk:14, rng:6, arm:0, pie:0, spd:"Rápida", cost:"50A 40O"},
+    ],
+    strong:["Escaramuzadores","Línea Milicia","Lanceros","Arqueros de Caballería","Arietes","Huscarles","Asedio (cerca)","Caballero Teutónico"],
+    weak:  ["Arqueros","Escorpiones","Mangonales","Guerreros Jaguar","Artillero de Mano","Jenízaros","Monjes","Caballería Pesada","Samurái","Honderos","Arqueros Emplumados"]},
+
+  // ── NUEVAS UNIDADES ──
+  { name:"Milicia Flamenca", civ:"Burgondios", img:"Aoe2-icon-flemish-militia.webp",
+    note:"Se genera vía tec. única 'Revolución Flamenca'",
+    units:[{name:"Milicia Flamenca", hp:60, atk:10, arm:1, pie:1, spd:"Media", cost:"60A"}],
+    strong:["Caballería","Infantería","Edificios"],
+    weak:  ["Arqueros","Mangonales","Onagros","Caballería Pesada"]},
+
+  { name:"Sargento", civ:"Sicilianos", img:"Aoe2-icon-serjeant.webp",
+    units:[
+      {name:"Sargento",       hp:75, atk:8,  arm:2, pie:1, spd:"Lenta"},
+      {name:"Sargento Élite", hp:90, atk:10, arm:4, pie:2, spd:"Lenta", cost:"60A 35O"},
+    ],
+    note:"Puede construir Donjons",
+    strong:["Infantería melee","Edificios (puede construir Donjons)","Asedio (cerca)"],
+    weak:  ["Arqueros","Mangonales","Onagros","Monjes"]},
+
+  { name:"Lancero de Fuego", civ:"Jurchens", img:"Elite_Fire_Lancer_AoE2.webp",
+    units:[
+      {name:"Lancero de Fuego",       hp:50, atk:10, arm:0, pie:1, spd:"Rápida"},
+      {name:"Lancero de Fuego Élite", hp:65, atk:14, arm:1, pie:1, spd:"Rápida", cost:"65A 40O"},
+    ],
+    note:"Unidad regional china (los Jurchens la usan; su UU es la Pagoda de Hierro)",
+    strong:["Edificios","Caballería","Grupos de unidades","Infantería"],
+    weak:  ["Piqueros","Arqueros","Mangonales","Camellos"]},
+
+  { name:"Sacerdote Guerrero", civ:"Armenios", img:"AoE2_WarriorPriest.webp",
+    note:"Infantería religiosa: pelea, cura aliados, convierte y lleva reliquias",
+    units:[{name:"Sacerdote Guerrero", hp:80, atk:11, arm:1, pie:1, spd:"Lenta", cost:"40A 50O"}],
+    strong:["Aldeanos","Monjes (conversión)","Infantería ligera","Recoge reliquias"],
+    weak:  ["Arqueros","Caballería","Infantería en combate directo","Escaramuzadores"]},
+
+  { name:"Guerrero Ibirapema", civ:"Tupi", img:"Elite_Ibirapema_Warrior_AoE2.webp",
+    units:[
+      {name:"Guerrero Ibirapema",       hp:50, atk:8,  arm:0, pie:0, spd:"Rápida"},
+      {name:"Guerrero Ibirapema Élite", hp:65, atk:10, arm:1, pie:1, spd:"Rápida", cost:"60A 30O"},
+    ],
+    note:"Bono vs caballería",
+    strong:["Caballería (bono)","Infantería","Edificios"],
+    weak:  ["Arqueros","Siege","Piqueros","Monjes"]},
+
+  { name:"Línea Champi", civ:"Muisca", img:"Elite_Champi_Warrior_AoE2.webp",
+    units:[
+      {name:"Explorador Champi",       hp:45, atk:4,  arm:0, pie:1, spd:"Muy Rápida"},
+      {name:"Corredor Champi",         hp:50, atk:6,  arm:0, pie:2, spd:"Muy Rápida"},
+      {name:"Guerrero Champi",         hp:60, atk:8,  arm:1, pie:2, spd:"Rápida"},
+      {name:"Guerrero Champi Élite",   hp:70, atk:12, arm:1, pie:3, spd:"Rápida", cost:"20A 40O"},
+    ],
+    note:"Chronicles — unidad única de exploración y combate",
+    strong:["Monjes","Aldeanos","Escaramuzadores","Edificios"],
+    weak:  ["Arqueros","Caballería Pesada","Artillería"]},
+
+  { name:"Ghulam", civ:"Indios", img:null,
+    note:"Lanza una cuchilla que daña a las unidades detrás del objetivo",
+    units:[
+      {name:"Ghulam",       hp:60, atk:9,  arm:0, pie:3, spd:"Media"},
+      {name:"Ghulam Élite", hp:70, atk:11, arm:0, pie:6, spd:"Media", cost:"30A 45O"},
+    ],
+    strong:["Arqueros","Escaramuzadores","Infantería","Línea Milicia","Edificios"],
+    weak:  ["Caballería","Camellos","Arqueros de Caballería","Mangonales","Guerreros Jaguar"]},
+
+  { name:"Espadachín Urumi", civ:"Dravidios", img:null,
+    note:"Acumula carga y libera un ataque de área que ignora armadura",
+    units:[
+      {name:"Espadachín Urumi",       hp:55, atk:9,  arm:1, pie:0, spd:"Media"},
+      {name:"Espadachín Urumi Élite", hp:65, atk:11, arm:1, pie:0, spd:"Media", cost:"65A 20O"},
+    ],
+    strong:["Infantería","Caballería (con carga)","Unidades agrupadas","Línea Milicia","Edificios"],
+    weak:  ["Arqueros","Escaramuzadores","Arqueros de Caballería","Mangonales","Camellos"]},
+
+  { name:"Guerrero Karambit", civ:"Malayos", img:null,
+    note:"Ocupa media población — barato y en enjambre",
+    units:[
+      {name:"Guerrero Karambit",       hp:30, atk:7, arm:0, pie:1, spd:"Media"},
+      {name:"Guerrero Karambit Élite", hp:40, atk:8, arm:1, pie:1, spd:"Media", cost:"25A 15O"},
+    ],
+    strong:["Edificios (enjambre)","Infantería lenta","Asedio (cerca)","Caballería (rodeando)"],
+    weak:  ["Arqueros","Escaramuzadores","Mangonales","Onagros","Camellos","Guerreros Jaguar"]},
+
+  { name:"Obuch", civ:"Polacos", img:null,
+    note:"Reduce la armadura del enemigo con cada golpe",
+    units:[
+      {name:"Obuch",       hp:80, atk:8,  arm:2, pie:2, spd:"Lenta"},
+      {name:"Obuch Élite", hp:95, atk:10, arm:2, pie:2, spd:"Lenta", cost:"55A 20O"},
+    ],
+    strong:["Infantería blindada","Caballería","Caballero Teutónico","Catafractos","Boyardos","Edificios"],
+    weak:  ["Arqueros","Escaramuzadores","Arqueros de Caballería","Mangonales","Camellos"]},
+
+  { name:"Legionario", civ:"Romanos", img:null,
+    note:"Bono vs infantería y unidades únicas — mejora a Élite",
+    units:[{name:"Legionario", hp:75, atk:12, arm:2, pie:2, spd:"Lenta", cost:"50A 20O"}],
+    strong:["Infantería","Unidades únicas melee","Línea Milicia","Edificios"],
+    weak:  ["Arqueros","Escaramuzadores","Arqueros de Caballería","Mangonales","Caballería"]},
+];
+
+// ═══════ CABALLERÍA ═══════
+const cavalry = [
+  { name:"Línea Explorador", civ:null, img:"Hussar_aoe2DE.webp", cost:"80A",
+    units:[
+      {name:"Caballería Exploradora", hp:45,  atk:3,  arm:0, pie:2, spd:"Muy Rápida", img:"Scoutcavalry_aoe2DE.webp",
+       strong:["Aldeanos","Monjes","Escaramuzadores"],
+       weak:  ["Infantería","Caballería Pesada","Piqueros","Camellos"]},
+      {name:"Caballería Ligera",      hp:60,  atk:7,  arm:0, pie:2, spd:"Muy Rápida", img:"Lightcavalry_aoe2DE.webp",
+       strong:["Escaramuzadores","Aldeanos","Asedio","Arqueros","Monjes"],
+       weak:  ["Infantería","Piqueros","Camellos"]},
+      {name:"Húsar",                  hp:75,  atk:7,  arm:0, pie:2, spd:"Muy Rápida", img:"Hussar_aoe2DE.webp",
+       strong:["Escaramuzadores","Aldeanos","Asedio","Arqueros","Monjes","Siege ligero"],
+       weak:  ["Infantería","Piqueros","Camellos"]},
+    ],
+    strong:["Escaramuzadores","Aldeanos","Asedio","Arqueros","Monjes"],
+    weak:  ["Infantería","Piqueros","Camellos"]},
+
+  { name:"Línea Caballero", civ:null, img:"Paladin_aoe2DE.webp", cost:"60A 75O",
+    units:[
+      {name:"Caballero",          hp:100, atk:10, arm:2, pie:2, spd:"Rápida", img:"Knight_aoe2DE.webp",
+       strong:["Infantería","Arqueros","Aldeanos","Asedio"],
+       weak:  ["Piqueros","Camellos","Monjes","Kamayuks","Boyardos","Ballesteros Genoveses","Caballeros Teutónicos","Mamelucos","Elefantes de Guerra"]},
+      {name:"Caballero Veterano", hp:120, atk:12, arm:2, pie:2, spd:"Rápida", img:"Cavalier_aoe2DE.webp",
+       strong:["Infantería","Arqueros","Aldeanos","Asedio","Cav. Archers"],
+       weak:  ["Piqueros","Camellos","Monjes","Kamayuks","Boyardos","Mamelucos","Elefantes de Guerra"]},
+      {name:"Paladín",            hp:160, atk:14, arm:2, pie:3, spd:"Rápida", img:"Paladin_aoe2DE.webp",
+       strong:["Infantería","Arqueros","Aldeanos","Asedio","Cav. Archers","Caballería Ligera","Berserkers"],
+       weak:  ["Piqueros","Camellos","Monjes","Kamayuks","Elefantes de Guerra"]},
+    ],
+    strong:["Infantería","Arqueros","Aldeanos","Asedio","Cav. Archers","Caballería Ligera"],
+    weak:  ["Piqueros","Camellos","Monjes","Kamayuks","Boyardos","Mamelucos"]},
+
+  { name:"Línea Camello", civ:null, img:"ImperialCamelRiderIcon-DE.webp", cost:"55A 60O",
+    units:[
+      {name:"Explorador Camello",         hp:90,  atk:5,  arm:0, pie:0, spd:"Rápida", img:"Aoe2de_camel_scout.webp"},
+      {name:"Camello",                    hp:100, atk:6,  arm:0, pie:0, spd:"Rápida", img:"Camelrider_aoe2DE.webp"},
+      {name:"Camello Pesado",             hp:120, atk:7,  arm:0, pie:0, spd:"Rápida", img:"Aoe2_heavycamelriderDE.webp"},
+      {name:"Camello Imperial (India)",   hp:140, atk:9,  arm:0, pie:0, spd:"Rápida", cost:"55A 60O", img:"ImperialCamelRiderIcon-DE.webp"},
+    ],
+    strong:["Escaramuzadores","Asedio","Arqueros de Caballería","Caballería (ex. Catafractos)"],
+    weak:  ["Infantería","Arqueros","Torres","Castillos"]},
+
+  { name:"Mameluco", civ:"Sarracenos", img:"MamelukeIcon-DE.webp",
+    units:[
+      {name:"Mameluco",       hp:65, atk:8,  rng:3, arm:0, pie:0, spd:"Rápida"},
+      {name:"Mameluco Élite", hp:80, atk:10, rng:3, arm:1, pie:0, spd:"Rápida", cost:"55A 85O"},
+    ],
+    strong:["Escaramuzadores","Asedio","Arqueros de Caballería","Caballería","Infantería a pie"],
+    weak:  ["Piqueros","Kamayuk","Berserker","Ballestero Genovés","Guerreros Águila","Torres","Castillos"]},
+
+  { name:"Catafracto", civ:"Bizantinos", img:"Cataphract_AoE2_LotW.webp",
+    units:[
+      {name:"Catafracto",       hp:110, atk:9,  arm:2, pie:1, spd:"Rápida"},
+      {name:"Catafracto Élite", hp:150, atk:12, arm:2, pie:1, spd:"Rápida", cost:"70A 75O"},
+    ],
+    strong:["Escaramuzadores","Infantería en general","Aldeanos","Asedio","Caballería Ligera"],
+    weak:  ["Piqueros","Kamayuk","Ballestero Genovés","Samurái","Mameluco","Camellos","Elefante de Guerra","Arqueros","Boyardos","Arqueros de Caballería"]},
+
+  { name:"Elefante de Guerra", civ:"Persas", img:"WarElephantIcon-DE.webp",
+    units:[
+      {name:"Elefante de Guerra",       hp:450, atk:15, arm:1, pie:2, spd:"Lenta"},
+      {name:"Elefante de Guerra Élite", hp:600, atk:20, arm:1, pie:3, spd:"Lenta", cost:"200A 75O"},
+    ],
+    strong:["Escaramuzadores","Unidades melee","Asedio","Edificios"],
+    weak:  ["Piqueros","Kamayuk","Berserker (con Chieftains)","Ballestero Genovés","Samurái","Mameluco","Camellos","Arqueros","Arqueros de Caballería","Monjes"]},
+
+  { name:"Boyardo", civ:"Eslavos", img:null,
+    units:[
+      {name:"Boyardo",       hp:100, atk:12, arm:4, pie:1, spd:"Rápida"},
+      {name:"Boyardo Élite", hp:130, atk:14, arm:6, pie:2, spd:"Rápida", cost:"50A 80O"},
+    ],
+    strong:["Escaramuzadores","Aldeanos","Asedio (cerca)","Casi todas las unidades melee"],
+    weak:  ["Piqueros","Kamayuk","Berserker","Ballestero Genovés","Caballero Teutónico","Mameluco","Camellos","Guerreros Águila","Monjes","Elefante de Guerra","Samurái","Escorpiones","Onagros","Arqueros"]},
+
+  // ── NUEVAS ──
+  { name:"Savar", civ:"Persas", img:"AoE2_Savar.webp",
+    note:"Reemplaza al Paladín para Persas",
+    units:[{name:"Savar", hp:160, atk:14, arm:2, pie:3, spd:"Rápida", cost:"60A 75O"}],
+    strong:["Infantería","Arqueros","Aldeanos","Asedio","Arqueros de Caballería","Caballería Ligera"],
+    weak:  ["Piqueros","Camellos","Monjes","Kamayuks","Guerreros Águila"]},
+
+  { name:"Húsar Alado", civ:"Polacos", img:"Aoe2-icon-winged-hussar.webp",
+    note:"Reemplaza al Húsar para Polacos",
+    units:[{name:"Húsar Alado", hp:85, atk:8, arm:0, pie:2, spd:"Muy Rápida", cost:"80A"}],
+    strong:["Escaramuzadores","Aldeanos","Siege","Arqueros","Monjes"],
+    weak:  ["Infantería","Caballería Pesada","Piqueros"]},
+
+  { name:"Lancero de Estepa", civ:null, img:"Elitesteppelancericon.webp",
+    note:"Cumanos, Mongoles, Tártaros, Búlgaros, Lituanos",
+    units:[
+      {name:"Lancero de Estepa",       hp:80, atk:8,  arm:1, pie:0, spd:"Rápida"},
+      {name:"Lancero de Estepa Élite", hp:90, atk:10, arm:1, pie:0, spd:"Rápida", cost:"70A 45O"},
+    ],
+    note:"Ataque en área a unidades adyacentes",
+    strong:["Infantería agrupada (área)","Caballería Ligera","Asedio"],
+    weak:  ["Piqueros","Arqueros","Camellos","Caballería Pesada"]},
+
+  { name:"Tarkan", civ:"Hunos", img:"EliteTarkanIcon-DE.webp",
+    units:[
+      {name:"Tarkan",       hp:100, atk:8,  arm:1, pie:3, spd:"Rápida"},
+      {name:"Tarkan Élite", hp:150, atk:11, arm:1, pie:4, spd:"Rápida", cost:"60A 60O"},
+    ],
+    note:"Bono vs edificios",
+    strong:["Edificios (bono)","Infantería","Escaramuzadores"],
+    weak:  ["Piqueros","Arqueros","Monjes","Mangonales"]},
+
+  { name:"Elefante de Batalla", civ:"SE Asia", img:"Elite_battle_elephant_aoe2DE.webp",
+    note:"Jemeres, Birmanos, Malayos, Vietnamitas",
+    units:[
+      {name:"Elefante de Batalla",       hp:250, atk:12, arm:1, pie:2, spd:"Lenta"},
+      {name:"Elefante de Batalla Élite", hp:300, atk:14, arm:2, pie:3, spd:"Lenta", cost:"120A 70O"},
+    ],
+    strong:["Unidades melee","Edificios","Asedio"],
+    weak:  ["Piqueros","Monjes","Arqueros","Camellos","Kamayuk"]},
+
+  { name:"Jinete Shrivamsha", civ:"Gurjaras", img:"AoE2DE_Elite_Shrivamsha_Rider.webp",
+    units:[
+      {name:"Jinete Shrivamsha",       hp:40, atk:8, arm:0, pie:5, spd:"Muy Rápida"},
+      {name:"Jinete Shrivamsha Élite", hp:65, atk:8, arm:0, pie:6, spd:"Muy Rápida", cost:"55A 50O"},
+    ],
+    note:"Escudo que absorbe un impacto (6 cargas) — regenera automáticamente",
+    strong:["Arqueros (esquiva flechas)","Monjes","Caballería Ligera"],
+    weak:  ["Caballería melee","Piqueros","Siege","Mangonales"]},
+
+  { name:"Konnik", civ:"Búlgaros", img:"EliteKonnikIcon-DE.webp",
+    units:[
+      {name:"Konnik",       hp:100, atk:12, arm:2, pie:2, spd:"Rápida"},
+      {name:"Konnik Élite", hp:120, atk:14, arm:3, pie:2, spd:"Rápida", cost:"60A 70O"},
+    ],
+    note:"Al morir, se desmonta como infantería (35/45 HP)",
+    strong:["Arqueros","Infantería","Aldeanos","Asedio"],
+    weak:  ["Piqueros","Camellos","Monjes","Ballestero Genovés"]},
+
+  { name:"Ratha", civ:"Bengalíes", img:"EliteRathaMeleeIcon-DE.webp",
+    units:[
+      {name:"Ratha",       hp:120, atk:9, rng:4, arm:1, pie:2, spd:"Rápida"},
+      {name:"Ratha Élite", hp:150, atk:11,rng:4, arm:1, pie:3, spd:"Rápida", cost:"70A 60O"},
+    ],
+    note:"Puede alternar entre modo melee y ranged (ATK melee/ranged: 9/6 → 11/8)",
+    strong:["(Melee) Arqueros / (Ranged) Infantería","Aldeanos","Asedio"],
+    weak:  ["(Melee) Piqueros / (Ranged) Escaramuzadores","Camellos","Monjes"]},
+
+  { name:"Húsar Magiar", civ:"Magiares", img:null,
+    note:"Bono vs asedio · con su tec. única no cuesta oro",
+    units:[
+      {name:"Húsar Magiar",       hp:80, atk:10, arm:0, pie:2, spd:"Muy Rápida"},
+      {name:"Húsar Magiar Élite", hp:90, atk:11, arm:0, pie:2, spd:"Muy Rápida", cost:"35A 45O"},
+    ],
+    strong:["Asedio (bono)","Aldeanos","Arqueros","Monjes","Escaramuzadores"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes (conversión)"]},
+
+  { name:"Keshik", civ:"Tártaros", img:null,
+    note:"Genera oro al atacar",
+    units:[
+      {name:"Keshik",       hp:120, atk:9,  arm:1, pie:2, spd:"Rápida"},
+      {name:"Keshik Élite", hp:145, atk:11, arm:1, pie:3, spd:"Rápida", cost:"60A 40O"},
+    ],
+    strong:["Infantería","Arqueros a pie","Asedio","Aldeanos"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes","Ballestero Genovés"]},
+
+  { name:"Leitis", civ:"Lituanos", img:null,
+    note:"Su ataque ignora la armadura del enemigo",
+    units:[
+      {name:"Leitis",       hp:100, atk:13, arm:1, pie:1, spd:"Rápida"},
+      {name:"Leitis Élite", hp:130, atk:16, arm:2, pie:1, spd:"Rápida", cost:"70A 50O"},
+    ],
+    strong:["Caballería pesada","Infantería blindada","Catafractos","Boyardos","Caballero Teutónico","Edificios"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes","Escaramuzadores (en masa)"]},
+
+  { name:"Coustillier", civ:"Burgondios", img:null,
+    note:"Ataque de carga que hace gran daño inicial",
+    units:[
+      {name:"Coustillier",       hp:115, atk:8,  arm:2, pie:2, spd:"Rápida"},
+      {name:"Coustillier Élite", hp:145, atk:11, arm:2, pie:2, spd:"Rápida", cost:"55A 55O"},
+    ],
+    strong:["Infantería","Arqueros","Aldeanos","Asedio","Unidades de poca HP (carga)"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes","Kamayuk","Ballestero Genovés"]},
+
+  { name:"Monaspa", civ:"Georgianos", img:null,
+    note:"Más fuerte y barato cuando ataca en grupo",
+    units:[
+      {name:"Monaspa",       hp:70, atk:12, arm:3, pie:2, spd:"Rápida"},
+      {name:"Monaspa Élite", hp:80, atk:14, arm:5, pie:2, spd:"Rápida", cost:"60A 45O"},
+    ],
+    strong:["Infantería","Arqueros","Asedio","Aldeanos"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes","Ballestero Genovés"]},
+
+  { name:"Centurión", civ:"Romanos", img:null,
+    note:"UU imperial — potencia a la infantería cercana",
+    units:[
+      {name:"Centurión",       hp:110, atk:13, arm:2, pie:3, spd:"Rápida"},
+      {name:"Centurión Élite", hp:155, atk:15, arm:3, pie:3, spd:"Rápida", cost:"75A 85O"},
+    ],
+    strong:["Infantería","Arqueros","Asedio","Aldeanos"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes"]},
+
+  { name:"Pagoda de Hierro", civ:"Jurchens", img:null,
+    note:"Caballería pesada — ignora un ataque cuerpo a cuerpo cada cierto tiempo",
+    units:[
+      {name:"Pagoda de Hierro",       hp:115, atk:12, arm:1, pie:3, spd:"Rápida"},
+      {name:"Pagoda de Hierro Élite", hp:140, atk:13, arm:2, pie:3, spd:"Rápida", cost:"80A 55O"},
+    ],
+    strong:["Infantería","Arqueros","Aldeanos","Asedio"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes","Ballestero Genovés"]},
+];
+
+// ═══════ ARQUEROS ═══════
+const archers = [
+  { name:"Línea Arquero", civ:null, img:"Arbalester_aoe2DE.webp", cost:"25M 45O",
+    units:[
+      {name:"Arquero",    hp:30, atk:4, rng:4, acc:"80%", arm:0, pie:0, spd:"Media", img:"Archer_aoe2DE.webp",
+       strong:["Infantería","Aldeanos"],
+       weak:  ["Escaramuzadores","Caballería","Scorpiones","Mangonales","Huscarles","Guerreros Águila"]},
+      {name:"Ballestero", hp:35, atk:5, rng:5, acc:"85%", arm:0, pie:0, spd:"Media", img:"Crossbowman_aoe2DE.webp",
+       strong:["Infantería","Aldeanos","Espadachines"],
+       weak:  ["Escaramuzadores","Caballería","Escorpiones","Mangonales","Huscarles","Guerreros Águila"]},
+      {name:"Arbalesta",  hp:40, atk:6, rng:5, acc:"90%", arm:0, pie:0, spd:"Media", img:"Arbalester_aoe2DE.webp",
+       strong:["Infantería","Aldeanos","Jenízaros","Artilleros de Mano","Infantería lenta"],
+       weak:  ["Escaramuzadores","Escorpiones","Mangonales","Caballería","Huscarles"]},
+    ],
+    strong:["Infantería","Aldeanos","Jenízaros","Artilleros de Mano"],
+    weak:  ["Escaramuzadores","Escorpiones","Mangonales","Caballería","Huscarles","Guerreros Águila"]},
+
+  { name:"Línea Escaramuzador", civ:null, img:"Elite_skirmisher_aoe2DE.webp", cost:"25A 35M",
+    units:[
+      {name:"Escaramuzador",          hp:30, atk:2, rng:4, acc:"90%", arm:0, pie:3, spd:"Media", img:"Skirmisher_aoe2DE.webp"},
+      {name:"Escaramuzador Élite",    hp:35, atk:3, rng:5, acc:"90%", arm:0, pie:4, spd:"Media", img:"Elite_skirmisher_aoe2DE.webp"},
+      {name:"Escaramuzador Imperial", hp:40, atk:4, rng:6, acc:"90%", arm:0, pie:5, spd:"Media", cost:"25A 35M", img:"Imperialskirmishericon-DE.webp"},
+    ],
+    note:"Escaramuzador Imperial: Vietnamitas",
+    strong:["Arqueros","Arqueros de Caballería"],
+    weak:  ["Unidades melee","Asedio"]},
+
+  { name:"Línea Arquero de Caballería", civ:null, img:"Heavycavalryarcher_aoe2de.webp", cost:"40M 60O",
+    units:[
+      {name:"Arquero de Caballería",        hp:50, atk:6, rng:4, acc:"50%", arm:0, pie:0, spd:"Rápida", img:"Cavalryarcher_aoe2DE.webp"},
+      {name:"Arquero de Caballería Pesado", hp:60, atk:7, rng:4, acc:"50%", arm:1, pie:0, spd:"Rápida", cost:"40M 60O", img:"Heavycavalryarcher_aoe2de.webp"},
+    ],
+    strong:["Unidades lentas sin rango","Caballería Pesada"],
+    weak:  ["Kamayuks","Ballesteros Genoveses","Huscarles","Mamelucos","Camellos","Escaramuzadores","Guerreros Águila","Mangonales/Onagros"]},
+
+  { name:"Artillero de Mano", civ:null, img:"Hand_cannoneer_aoe2DE.webp",
+    units:[{name:"Artillero de Mano", hp:35, atk:17, rng:7, acc:"65%", arm:1, pie:0, spd:"Media", cost:"45A 50O"}],
+    strong:["Infantería","Asedio (cerca)","Caballería (cerca)"],
+    weak:  ["Escaramuzadores","Escorpiones","Onagros","Caballería Pesada","Huscarles","Condotieros"]},
+
+  { name:"Chu Ko Nu", civ:"Chinos", img:"ChukoNuIcon-DE.webp",
+    units:[
+      {name:"Chu Ko Nu",       hp:45, atk:8, rng:4, acc:"85%", arm:0, pie:0, spd:"Lenta"},
+      {name:"Chu Ko Nu Élite", hp:50, atk:8, rng:4, acc:"85%", arm:0, pie:0, spd:"Lenta", cost:"40M 35O"},
+    ],
+    strong:["Línea Milicia","Infantería lenta","Aldeanos","Edificios"],
+    weak:  ["Escaramuzadores","Samurái","Escorpiones","Mangonales","Caballería","Huscarles","Guerreros Águila"]},
+
+  { name:"Jenízaro", civ:"Turcos", img:"JanissaryIcon-DE.webp",
+    units:[
+      {name:"Jenízaro",       hp:35, atk:17, rng:8, acc:"50%", arm:1, pie:0, spd:"Lenta"},
+      {name:"Jenízaro Élite", hp:40, atk:22, rng:8, acc:"50%", arm:2, pie:0, spd:"Lenta", cost:"60A 55O"},
+    ],
+    strong:["Infantería (ex. Huscarl/Samurái/Condotiero)","Asedio (cerca)","Caballería melee (cerca)","Edificios"],
+    weak:  ["Escaramuzadores","Samurái","Escorpiones","Mangonales","Caballería Pesada","Huscarles","Condotiero"]},
+
+  { name:"Arquero de Arco Largo", civ:"Británicos", img:"Longbowman_AoE2_TTK.webp",
+    units:[
+      {name:"Arquero de Arco Largo",       hp:35, atk:6, rng:5, acc:"70%", arm:0, pie:0, spd:"Lenta"},
+      {name:"Arquero de Arco Largo Élite", hp:40, atk:7, rng:6, acc:"80%", arm:0, pie:1, spd:"Lenta", cost:"35M 40O"},
+    ],
+    strong:["Línea Milicia","Infantería lenta","Aldeanos","Boyardo","Arqueros con menos rango","Edificios"],
+    weak:  ["Escaramuzadores","Samurái","Escorpiones","Mangonales","Caballería","Huscarles","Guerreros Águila"]},
+
+  { name:"Mangudai", civ:"Mongoles", img:"MangudaiIcon-DE.webp",
+    units:[
+      {name:"Mangudai",       hp:60, atk:6, rng:4, acc:"95%", arm:0, pie:0, spd:"Rápida"},
+      {name:"Mangudai Élite", hp:60, atk:8, rng:4, acc:"95%", arm:1, pie:0, spd:"Rápida", cost:"55M 65O"},
+    ],
+    strong:["Unidades lentas sin rango","Caballería Pesada","Asedio"],
+    weak:  ["Kamayuk","Berserker","Ballestero Genovés","Huscarl","Mameluco","Camellos","Escaramuzadores","Guerreros Águila","Alabarderos","Samurái"]},
+
+  { name:"Arquero Emplumado", civ:"Mayas", img:"PlumedArcherIcon-TTK.webp",
+    units:[
+      {name:"Arquero Emplumado",       hp:50, atk:5, rng:4, acc:"80%", arm:0, pie:1, spd:"Rápida"},
+      {name:"Arquero Emplumado Élite", hp:65, atk:5, rng:5, acc:"90%", arm:0, pie:2, spd:"Rápida", cost:"46M 48O"},
+    ],
+    strong:["Línea Milicia","Infantería lenta","Aldeanos","Boyardo","Arqueros con menos rango","Edificios"],
+    weak:  ["Escaramuzadores","Escorpiones","Mangonales","Caballería","Huscarles","Guerreros Águila"]},
+
+  { name:"Vagón de Guerra", civ:"Coreanos", img:"WarWagonIcon-DE.webp",
+    units:[
+      {name:"Vagón de Guerra",       hp:150, atk:9, rng:4, acc:"100%", arm:0, pie:3, spd:"Rápida"},
+      {name:"Vagón de Guerra Élite", hp:200, atk:9, rng:5, acc:"100%", arm:0, pie:4, spd:"Rápida", cost:"110M 60O"},
+    ],
+    strong:["Unidades lentas sin rango","Arqueros"],
+    weak:  ["Piqueros","Kamayuk","Berserker","Ballestero Genovés","Huscarl","Mameluco","Camellos","Escaramuzadores","Guerreros Águila","Onagros","Samurái","Monjes","Caballería melee"]},
+
+  { name:"Conquistador", civ:"Españoles", img:"ConquistadorIcon-DE.webp",
+    units:[
+      {name:"Conquistador",       hp:55, atk:16, rng:6, acc:"65%", arm:2, pie:2, spd:"Rápida"},
+      {name:"Conquistador Élite", hp:70, atk:18, rng:6, acc:"70%", arm:2, pie:2, spd:"Rápida", cost:"60A 70O"},
+    ],
+    strong:["Unidades lentas sin rango (esp. infantería)"],
+    weak:  ["Kamayuk","Berserker","Ballestero Genovés","Huscarl","Condotiero","Mameluco","Camellos","Escaramuzadores","Guerreros Águila","Onagros","Samurái"]},
+
+  { name:"Arquero Elefante", civ:"Indios", img:"ElephantArcherIcon-DE.webp",
+    units:[
+      {name:"Arquero Elefante",       hp:280, atk:6, rng:4, acc:"100%", arm:0, pie:4, spd:"Lenta"},
+      {name:"Arquero Elefante Élite", hp:330, atk:7, rng:4, acc:"100%", arm:0, pie:4, spd:"Lenta", cost:"100A 80O"},
+    ],
+    strong:["Unidades lentas sin rango","Arqueros","Edificios"],
+    weak:  ["Piqueros","Kamayuk","Berserker","Ballestero Genovés","Huscarl","Mameluco","Camellos","Escaramuzadores","Guerreros Águila","Samurái","Monjes"]},
+
+  { name:"Hondero", civ:"Incas", img:"SlingerIcon-DE.webp",
+    units:[{name:"Hondero", hp:40, atk:5, rng:5, acc:"90%", arm:0, pie:0, spd:"Lenta", cost:"30A 40O"}],
+    strong:["Infantería (ex. Samurái/Huscarl/Caballero Teutónico/Condotiero)","Asedio (cerca)","Aldeanos","Edificios"],
+    weak:  ["Escaramuzadores","Escorpiones","Mangonales","Caballería","Huscarles","Condotiero","Samurái"]},
+
+  { name:"Ballestero Genovés", civ:"Italianos", img:"GenoeseCrossbowmanIcon-DE.webp",
+    units:[
+      {name:"Ballestero Genovés",       hp:45, atk:6, rng:4, acc:"100%", arm:1, pie:0, spd:"Lenta"},
+      {name:"Ballestero Genovés Élite", hp:50, atk:6, rng:4, acc:"100%", arm:1, pie:0, spd:"Lenta", cost:"45M 40O"},
+    ],
+    strong:["Caballería","Arqueros de Caballería","Línea Milicia","Línea Lancero","Infantería lenta","Aldeanos"],
+    weak:  ["Escaramuzadores","Escorpiones","Mangonales","Huscarles","Guerreros Águila","Samurái","Arqueros con más rango"]},
+
+  { name:"Genitour", civ:"Bereberes", img:"EliteGenitourIcon-DE.webp",
+    units:[
+      {name:"Genitour",       hp:50, atk:4, rng:3, acc:"90%", arm:0, pie:3, spd:"Rápida"},
+      {name:"Genitour Élite", hp:55, atk:4, rng:4, acc:"90%", arm:0, pie:4, spd:"Rápida", cost:"50A 35O"},
+    ],
+    strong:["Arqueros","Arqueros de Caballería"],
+    weak:  ["Camellos","Piqueros","Asedio"]},
+
+  // ── NUEVOS ──
+  { name:"Kipchak", civ:"Cumanos", img:"EliteKipchakIcon-DE.webp",
+    units:[
+      {name:"Kipchak",       hp:50, atk:5, rng:4, acc:"50%", arm:0, pie:0, spd:"Rápida"},
+      {name:"Kipchak Élite", hp:55, atk:6, rng:4, acc:"50%", arm:0, pie:1, spd:"Rápida", cost:"55A 30O"},
+    ],
+    note:"Dispara 2-3 flechas simultáneas",
+    strong:["Infantería agrupada (flechas múltiples)","Asedio","Aldeanos"],
+    weak:  ["Mamelucos","Ballesteros Genoveses","Camellos","Escaramuzadores","Guerreros Águila"]},
+
+  { name:"Jinete de Bolas", civ:"Mapuche", img:"Elite_Bolas_Rider_AoE2.webp",
+    units:[
+      {name:"Jinete de Bolas",       hp:50, atk:7, rng:3, acc:"85%", arm:0, pie:1, spd:"Rápida"},
+      {name:"Jinete de Bolas Élite", hp:60, atk:9, rng:4, acc:"85%", arm:0, pie:1, spd:"Rápida", cost:"55A 40O"},
+    ],
+    note:"Bono vs caballería",
+    strong:["Caballería (bono)","Escaramuzadores","Arqueros"],
+    weak:  ["Camellos","Piqueros","Asedio","Mangonales"]},
+
+  { name:"Arquero Compuesto", civ:"Armenios", img:null,
+    note:"Su flecha ignora la armadura perforante (excepto barcos y asedio)",
+    units:[
+      {name:"Arquero Compuesto",       hp:40, atk:4, rng:4, acc:"100%", arm:1, pie:0, spd:"Media"},
+      {name:"Arquero Compuesto Élite", hp:45, atk:4, rng:4, acc:"100%", arm:2, pie:0, spd:"Media", cost:"35M 45O"},
+    ],
+    strong:["Infantería (ignora armadura)","Escaramuzadores","Piqueros","Línea Milicia","Aldeanos"],
+    weak:  ["Caballería","Arqueros con más rango","Mangonales","Huscarles","Guerreros Águila"]},
+
+  { name:"Lanzador de Chakram", civ:"Gurjaras", img:null,
+    note:"Lanza chakrams que atraviesan en línea — anti-infantería",
+    units:[
+      {name:"Lanzador de Chakram",       hp:40, atk:3, rng:5, acc:"100%", arm:1, pie:0, spd:"Media"},
+      {name:"Lanzador de Chakram Élite", hp:50, atk:4, rng:6, acc:"100%", arm:1, pie:0, spd:"Media", cost:"65A 30O"},
+    ],
+    strong:["Infantería","Línea Milicia","Unidades en línea","Edificios"],
+    weak:  ["Caballería","Arqueros de Caballería","Mangonales","Escaramuzadores","Camellos"]},
+
+  { name:"Arambai", civ:"Birmanos", img:null,
+    note:"Jinete con dardos de gran daño y baja precisión — letal en masa",
+    units:[
+      {name:"Arambai",       hp:60, atk:12, rng:5, acc:"20%", arm:0, pie:1, spd:"Rápida"},
+      {name:"Arambai Élite", hp:65, atk:14, rng:5, acc:"30%", arm:0, pie:2, spd:"Rápida", cost:"75M 60O"},
+    ],
+    strong:["Infantería","Edificios","Unidades agrupadas","Arqueros (en masa)","Asedio"],
+    weak:  ["Escaramuzadores","Caballería melee (cerca)","Mangonales","Camellos","Unidades rápidas dispersas"]},
+
+  { name:"Arquero Camello", civ:"Bereberes", img:null,
+    note:"Arquero montado en camello — anti arqueros de caballería",
+    units:[
+      {name:"Arquero Camello",       hp:55, atk:7, rng:4, acc:"95%", arm:0, pie:1, spd:"Rápida"},
+      {name:"Arquero Camello Élite", hp:60, atk:8, rng:4, acc:"95%", arm:1, pie:1, spd:"Rápida", cost:"50M 60O"},
+    ],
+    strong:["Arqueros de Caballería","Arqueros a pie","Unidades a distancia"],
+    weak:  ["Piqueros","Alabarderos","Caballería pesada","Escaramuzadores","Mangonales"]},
+
+  { name:"Arquero de Rotán", civ:"Vietnamitas", img:null,
+    note:"Altísima armadura perforante — gana el duelo de arqueros",
+    units:[
+      {name:"Arquero de Rotán",       hp:40, atk:6, rng:4, acc:"80%", arm:0, pie:4, spd:"Media"},
+      {name:"Arquero de Rotán Élite", hp:45, atk:7, rng:5, acc:"90%", arm:0, pie:6, spd:"Media", cost:"50M 45O"},
+    ],
+    strong:["Arqueros","Escaramuzadores","Infantería","Aldeanos","Otros arqueros"],
+    weak:  ["Caballería","Mangonales","Huscarles","Camellos","Guerreros Águila"]},
+
+  { name:"Elefante Balista", civ:"Jemeres", img:null,
+    note:"Elefante que dispara virotes que atraviesan en línea",
+    units:[
+      {name:"Elefante Balista",       hp:250, atk:9,  rng:5, acc:"100%", arm:0, pie:3, spd:"Lenta"},
+      {name:"Elefante Balista Élite", hp:280, atk:10, rng:5, acc:"100%", arm:0, pie:3, spd:"Lenta", cost:"100A 80O"},
+    ],
+    strong:["Infantería en línea","Arqueros","Edificios","Unidades agrupadas"],
+    weak:  ["Camellos","Monjes","Piqueros/Alabarderos","Mangonales/Onagros","Arqueros de Caballería"]},
+
+  { name:"Carro Husita", civ:"Bohemios", img:null,
+    note:"Vagón blindado a distancia — protege a las unidades detrás",
+    units:[
+      {name:"Carro Husita",       hp:160, atk:10, rng:6, acc:"85%", arm:0, pie:7,  spd:"Lenta"},
+      {name:"Carro Husita Élite", hp:230, atk:13, rng:6, acc:"90%", arm:1, pie:10, spd:"Lenta", cost:"110M 70O"},
+    ],
+    strong:["Arqueros","Escaramuzadores","Infantería a distancia","Aldeanos"],
+    weak:  ["Melee cuerpo a cuerpo (cerca)","Cañón de Bombardeo","Onagros","Monjes"]},
+];
+
+// ═══════ ASEDIO ═══════
+const siege = [
+  { name:"Línea Ariete", civ:null, img:"Siege_ram_aoe2DE.webp", cost:"160M",
+    units:[
+      {name:"Ariete",           hp:175, atk:2, arm:0, pie:180, spd:"Lenta", img:"Battering_ram_aoe2DE.webp"},
+      {name:"Ariete Reforzado", hp:200, atk:3, arm:0, pie:190, spd:"Lenta", img:"Capped_ram_aoe2DE.webp"},
+      {name:"Ariete de Asedio", hp:270, atk:4, arm:0, pie:195, spd:"Lenta", cost:"160M", img:"Siege_ram_aoe2DE.webp"},
+    ],
+    strong:["Edificios (especialmente Muros)","Trabuco (desempacado)"],
+    weak:  ["Casi todas las unidades (especialmente Magyar Huszar)","Arqueros de Caballería como Mangudai"]},
+
+  { name:"Línea Mangonal", civ:null, img:"Siege_onager_aoe2DE.webp", cost:"160M 135O",
+    units:[
+      {name:"Mangonal",         hp:50, atk:40, rng:7, acc:"100%", arm:0, pie:6, spd:"Lenta", img:"Mangonel_aoe2DE.webp"},
+      {name:"Onagro",           hp:60, atk:50, rng:8, acc:"100%", arm:0, pie:7, spd:"Lenta", img:"Onager_aoe2DE.webp"},
+      {name:"Onagro de Asedio", hp:70, atk:75, rng:8, acc:"100%", arm:0, pie:8, spd:"Lenta", cost:"160M 135O", img:"Siege_onager_aoe2DE.webp"},
+    ],
+    strong:["Edificios","Aldeanos","Arqueros","Unidades en formaciones densas"],
+    weak:  ["Unidades melee (cerca) esp. Magyar Huszar","Mangudais","Arqueros de Caballería","Unidades con más rango"]},
+
+  { name:"Línea Escorpión", civ:null, img:"Heavyscorpion_aoe2DE.webp", cost:"75M 75O",
+    units:[
+      {name:"Escorpión",        hp:40, atk:12, rng:7, acc:"100%", arm:0, pie:6, spd:"Lenta", img:"Scorpion_aoe2DE.webp"},
+      {name:"Escorpión Pesado", hp:50, atk:16, rng:7, acc:"100%", arm:0, pie:6, spd:"Lenta", cost:"75M 75O", img:"Heavyscorpion_aoe2DE.webp"},
+    ],
+    strong:["Edificios","Aldeanos","Unidades lentas en línea"],
+    weak:  ["Unidades melee (cerca) esp. Magyar Huszar","Mangudais","Arqueros de Caballería","Unidades con más rango"]},
+
+  { name:"Cañón de Bombardeo", civ:null, img:"Bombard_cannon_aoe2DE.webp",
+    units:[{name:"Cañón de Bombardeo", hp:80, atk:40, rng:12, acc:"92%", arm:2, pie:5, spd:"Lenta", cost:"225M 225O"}],
+    strong:["Edificios","Unidades en formaciones densas","Unidades lentas sin rango"],
+    weak:  ["Unidades melee (cerca) esp. Condotiero / Magyar Huszar","Mangudais","Arqueros de Caballería"]},
+
+  { name:"Trabuco", civ:null, img:"Trebuchet_aoe2DE.webp",
+    units:[{name:"Trabuco (plegado)", hp:150, atk:200, rng:16, acc:"15%", arm:2, pie:150, spd:"Lenta", cost:"200M 200O"}],
+    strong:["Edificios","Unidades lentas","Unidades en formaciones densas"],
+    weak:  ["Desplegado: melee (cerca)","Magyar Huszars","Mangudais","Arqueros de Caballería","Plegado: cualquier unidad"]},
+
+  { name:"Petardo", civ:null, img:"Petard_aoe2DE.webp",
+    units:[{name:"Petardo", hp:50, atk:25, arm:0, pie:2, spd:"Lenta", cost:"65M 20O"}],
+    strong:["Edificios","Aldeanos","Asedio (cerca)"],
+    weak:  ["Arqueros","Escorpiones","Arqueros de Caballería","Mangudai","Magyar Huszar","Condotiero","Castillos","Torres"]},
+
+  { name:"Cañón de Órgano", civ:"Portugueses", img:"OrganGunIcon-DE.webp",
+    units:[
+      {name:"Cañón de Órgano",       hp:60, atk:16, rng:7, acc:"50%", arm:2, pie:4, spd:"Lenta"},
+      {name:"Cañón de Órgano Élite", hp:70, atk:20, rng:7, acc:"50%", arm:2, pie:6, spd:"Lenta", cost:"80M 70O"},
+    ],
+    strong:["Aldeanos","Grupos compactos de unidades"],
+    weak:  ["Melee (cerca) esp. Samurái / Condotieros / Magyar Huszar","Mangudais","Arqueros de Caballería","Unidades con más rango"]},
+
+  // ── NUEVOS ──
+  { name:"Houfnice", civ:"Bohemios", img:"Aoe2-icon--houfnice.webp",
+    note:"Mejora del Cañón de Bombardeo para Bohemios",
+    units:[{name:"Houfnice", hp:85, atk:50, rng:12, acc:"92%", arm:2, pie:5, spd:"Lenta", cost:"225M 225O"}],
+    strong:["Edificios","Formaciones densas","Unidades lentas sin rango"],
+    weak:  ["Unidades melee (cerca)","Arqueros de Caballería","Caballería Rápida"]},
+
+  { name:"Camello en Llamas", civ:"Bizantinos", img:"Flaming_camel_icon.webp",
+    note:"Unidad suicida de un solo uso",
+    units:[{name:"Camello en Llamas", hp:42, atk:40, arm:0, pie:2, spd:"Rápida", cost:"80A 25O"}],
+    strong:["Caballería (daño de fuego en área)"],
+    weak:  ["Todo (unidad suicida)","Arqueros","Piqueros"]},
+
+  { name:"Elefante de Asedio", civ:"Bengalíes", img:"AoE2DE_Siege_Elephant_icon.webp",
+    units:[
+      {name:"Elefante Blindado",  hp:330, atk:50, arm:5, pie:5, spd:"Muy Lenta"},
+      {name:"Elefante de Asedio", hp:450, atk:75, arm:5, pie:5, spd:"Muy Lenta", cost:"150A 100O"},
+    ],
+    note:"Máquina de asedio en forma de elefante",
+    strong:["Edificios","Muros","Unidades melee en formación"],
+    weak:  ["Piqueros","Monjes","Arqueros","Camellos","Mangudais"]},
+];
+
+// ═══════ NAVAL ═══════
+const naval = [
+  { name:"Línea Galera", civ:null, img:"Galleon_aoe2DE.webp", cost:"75M 45O",
+    units:[
+      {name:"Galera",           hp:120, atk:6, rng:5, acc:"100%", arm:0, pie:6, spd:"Rápida", img:"Galley_aoe2DE.webp"},
+      {name:"Galera de Guerra", hp:135, atk:7, rng:6, acc:"100%", arm:0, pie:6, spd:"Rápida", img:"War_galley_aoe2DE.webp"},
+      {name:"Galeón",           hp:165, atk:8, rng:7, acc:"100%", arm:0, pie:8, spd:"Rápida", cost:"75M 45O", img:"Galleon_aoe2DE.webp"},
+    ],
+    strong:["Barcos de Transporte","Barcos Pesqueros","Edificios en orilla (ex. Torres/Castillos)","Barcos Explosivos (rango largo)"],
+    weak:  ["Barcos Explosivos (cerca)","Barcos de Fuego","Barcos Tortuga","Barcos Largos","Torres","Castillos","Asedio a distancia en orilla"]},
+
+  { name:"Línea Barco de Fuego", civ:null, img:"Fastfireship_aoe2DE.webp", cost:"75M 45O",
+    units:[
+      {name:"Galera de Fuego",       hp:100, atk:1, rng:2, acc:"55%", arm:0, pie:5, spd:"Rápida", img:"Fire_galley_aoe2DE.webp"},
+      {name:"Barco de Fuego",        hp:120, atk:2, rng:2, acc:"55%", arm:0, pie:7, spd:"Rápida", img:"Fireship_aoe2DE.webp"},
+      {name:"Barco de Fuego Rápido", hp:140, atk:3, rng:2, acc:"55%", arm:0, pie:9, spd:"Rápida", cost:"75M 45O", img:"Fastfireship_aoe2DE.webp"},
+    ],
+    strong:["Barcos de Transporte","Barcos Pesqueros","Edificios en orilla","Melee en orilla","Galeras","Galeones de Cañones"],
+    weak:  ["Barcos Explosivos","Barcos Tortuga","Barcos Largos","Torres","Castillos","Asedio a distancia en orilla"]},
+
+  { name:"Línea Barco Explosivo", civ:null, img:"Heavydemoship_aoe2de.webp", cost:"70M 50O",
+    units:[
+      {name:"Balsa Explosiva",        hp:50, atk:90,  arm:0, pie:3, spd:"Muy Rápida", img:"Demoraft_aoe2DE.webp"},
+      {name:"Barco Explosivo",        hp:60, atk:110, arm:0, pie:3, spd:"Muy Rápida", img:"Demoship_aoe2DE.webp"},
+      {name:"Barco Explosivo Pesado", hp:70, atk:140, arm:0, pie:5, spd:"Muy Rápida", cost:"70M 50O", img:"Heavydemoship_aoe2de.webp"},
+    ],
+    strong:["Barcos de Transporte","Barcos Pesqueros","Edificios en orilla","Galeras de Guerra / Barcos Largos (cerca)"],
+    weak:  ["Barcos Tortuga","Barcos Largos (lejos)","Galeras (lejos)","Torres","Castillos","Unidades a distancia en orilla"]},
+
+  { name:"Galeón de Cañones", civ:null, img:"Elite_cannon_galleon_aoe2de.webp", cost:"200M 150O",
+    units:[
+      {name:"Galeón de Cañones",       hp:120, atk:35, rng:13, acc:"50%", arm:0, pie:6, spd:"Media", img:"Cannon_galleon_aoe2DE.webp"},
+      {name:"Galeón de Cañones Élite", hp:150, atk:45, rng:15, acc:"50%", arm:0, pie:8, spd:"Media", cost:"200M 150O", img:"Elite_cannon_galleon_aoe2de.webp"},
+    ],
+    strong:["Barcos Pesqueros","Edificios en orilla"],
+    weak:  ["Barcos Tortuga","Barcos Largos","Galeones","Barcos de Fuego","Barcos Explosivos","Cañones de Bombardeo"]},
+
+  { name:"Barco Tortuga", civ:"Coreanos", img:"EliteTurtleShipIcon-DE.webp",
+    units:[
+      {name:"Barco Tortuga",       hp:200, atk:50, rng:6, acc:"100%", arm:6, pie:5, spd:"Lenta", img:"TurtleShipIcon-DE.webp"},
+      {name:"Barco Tortuga Élite", hp:300, atk:50, rng:6, acc:"100%", arm:8, pie:6, spd:"Lenta", cost:"200M 100O", img:"EliteTurtleShipIcon-DE.webp"},
+    ],
+    strong:["Barcos (cerca)","Edificios en orilla","Unidades sin rango en aguas poco profundas"],
+    weak:  ["Cañón de Bombardeo","Monjes","Trabuco","Castillos","Torres","Condotiero/Samurái (aguas poco profundas)","Barcos Explosivos (massed)"]},
+
+  { name:"Barco Largo", civ:"Vikingos", img:"LongboatIcon-DE.webp",
+    units:[
+      {name:"Barco Largo",       hp:130, atk:7, rng:6, acc:"100%", arm:0, pie:6, spd:"Rápida"},
+      {name:"Barco Largo Élite", hp:160, atk:8, rng:7, acc:"100%", arm:0, pie:8, spd:"Rápida", cost:"100M 50O"},
+    ],
+    strong:["Barcos de Transporte","Barcos Pesqueros","Edificios en orilla","Unidades en orilla","Barcos Explosivos (rango)","Galeras","Barcos de Fuego (rango)"],
+    weak:  ["Barcos Explosivos (cerca)","Barcos de Fuego (cerca)","Barcos Tortuga (cerca)","Torres","Castillos","Asedio a distancia en orilla"]},
+
+  { name:"Carabela", civ:"Portugueses", img:"EliteCaravelIcon-DE.webp",
+    units:[
+      {name:"Carabela",       hp:130, atk:6, rng:6, acc:"100%", arm:0, pie:8, spd:"Rápida", img:"CaravelIcon-DE.webp"},
+      {name:"Carabela Élite", hp:150, atk:8, rng:7, acc:"100%", arm:0, pie:8, spd:"Rápida", cost:"100M 50O", img:"EliteCaravelIcon-DE.webp"},
+    ],
+    strong:["Barcos de Transporte","Barcos Pesqueros","Edificios en orilla","Melee en orilla","Barcos Explosivos (rango)","Galeones de Cañones (micromanaged)"],
+    weak:  ["Galeones","Barcos Explosivos (cerca)","Barcos de Fuego","Barcos Tortuga","Barcos Largos","Torres","Castillos","Asedio a distancia"]},
+
+  // ── NUEVOS ──
+  { name:"Dromón", civ:"Bizantinos", img:"AoE2_Dromon.webp",
+    units:[
+      {name:"Dromón",       hp:120, atk:10, rng:6, acc:"100%", arm:0, pie:7, spd:"Rápida"},
+      {name:"Dromón Élite", hp:150, atk:12, rng:7, acc:"100%", arm:0, pie:9, spd:"Rápida", cost:"90M 50O"},
+    ],
+    note:"Barco con ataque de fuego — bono vs Barcos de Fuego",
+    strong:["Barcos de Fuego (bono)","Galeras","Melee en orilla","Barcos de Transporte"],
+    weak:  ["Galeones de Cañones","Barcos Explosivos","Torres","Castillos"]},
+
+  { name:"Thirisadai", civ:"Dravidios", img:"Aoe2de_Thirisadai.webp",
+    units:[{name:"Thirisadai", hp:500, atk:12, rng:8, acc:"100%", arm:0, pie:10, spd:"Media", cost:"200M 100O"}],
+    note:"Buque insignia — barco más poderoso del juego",
+    strong:["La mayoría de barcos","Melee en orilla","Edificios en orilla"],
+    weak:  ["Barcos Explosivos (massed)","Cañones de Bombardeo","Torres masivas"]},
+];
+
+// ═══════ ANIMALES ═══════
+const animals = [
+  {name:"Oveja",       hunters:1,     food:100, type:"herd"},
+  {name:"Vaca",        hunters:1,     food:150, type:"herd"},
+  {name:"Pavo",        hunters:1,     food:100, type:"herd"},
+  {name:"Llama",       hunters:1,     food:100, type:"herd"},
+  {name:"Cabra",       hunters:1,     food:100, type:"herd"},
+  {name:"Ciervo",      hunters:1,     food:140, type:"hunt"},
+  {name:"Jabalí",      hunters:"5-10",food:340, type:"hunt", note:"⚠ Contraataca"},
+  {name:"Elefante",    hunters:5,     food:300, type:"hunt"},
+  {name:"Avestruz",    hunters:1,     food:140, type:"hunt"},
+  {name:"Cebra",       hunters:1,     food:140, type:"hunt"},
+  {name:"Lobo / Lobo Rabioso", hunters:"2-3", food:null, type:"inedible"},
+  {name:"Oso",         hunters:"2-3", food:null, type:"inedible"},
+  {name:"León",        hunters:"2-3", food:null, type:"inedible"},
+  {name:"Cocodrilo",   hunters:5,     food:null, type:"inedible"},
+];
+
+// ═══════ CIVILIZACIONES ═══════
+// foco · bonos de civ · bono de equipo · unidad(es) única(s) · tec. únicas (Castillo/Imperial) · qué les falta
+const CIVS = [
+  {name:"Aztecas", focus:"Infantería · Monjes", img:"Aztecs_AoE2.webp",
+   bonus:["Aldeanos cargan +5","Unidades militares se crean 11% más rápido","Monjes +5 HP por cada tec. de monasterio investigada","Empiezan con +50 oro"],
+   team:"Reliquias generan +33% oro", uu:["Guerrero Jaguar"],
+   ut:["Atlatl (Castillo): Escaramuzadores +1 ataque/alcance/visión","Guerras de Flores (Imperial): infantería +4 ataque"],
+   lacks:["Toda la caballería","Pólvora","Bombarderos","Husar/Camellos"]},
+  {name:"Mayas", focus:"Arqueros", img:"Mayans_AoE2.webp",
+   bonus:["Empiezan con +1 aldeano (−50 comida)","Recursos duran +15% más","Arqueros (no UU) cuestan −10/20/30% por edad"],
+   team:"Murallas cuestan −50%", uu:["Arquero Emplumado"],
+   ut:["Obsidian Arrows (Castillo): arqueros a pie +6 ataque vs edificios","El Dorado (Imperial): Guerreros Águila +40 HP"],
+   lacks:["Toda la caballería","Pólvora","Bombarderos","Camellos"]},
+  {name:"Incas", focus:"Infantería · todoterreno", img:"Incas_AoE2.webp",
+   bonus:["Casas sostienen 10 de población","Comienzan con llama y aldeano extra","Aldeanos protegidos por armadura de Herrería","Edificios cuestan −15% piedra"],
+   team:"Granjeros trabajan +10% más rápido", uu:["Kamayuk","Hondero"],
+   ut:["Andean Sling (Castillo): Honderos/Kamayuks sin daño mínimo","Couriers (Imperial): Kamayuk/Hondero +1 armadura, +2 ataque"],
+   lacks:["Caballería pesada (sin Paladín)","Arqueros de élite limitados"]},
+  {name:"Británicos", focus:"Arqueros a pie", img:"Britons_AoE2.webp",
+   bonus:["Centros Urbanos cuestan −50% madera (desde Feudal)","Arqueros a pie +1 alcance (Castillo) y +1 más (Imperial)","Pastores trabajan +25% más rápido"],
+   team:"Arquerías trabajan +20% más rápido", uu:["Arquero de Arco Largo"],
+   ut:["Yeomen (Castillo): arqueros a pie +1 alcance, torres +2 ataque","Warwolf (Imperial): Trabucos hacen daño de área"],
+   lacks:["Camellos","Bombarderos","unidades de pólvora limitadas","caballería de élite"]},
+  {name:"Francos", focus:"Caballería", img:"Franks_AoE2.webp",
+   bonus:["Caballeros +20% HP","Castillos cuestan −25%","Granjas mejoran gratis","Recolección de baya +25%"],
+   team:"Caballería explora con +2 línea de visión", uu:["Lanzador de Hacha"],
+   ut:["Bearded Axe (Castillo): Lanzadores de Hacha +1 alcance","Chivalry (Imperial): Establos trabajan +40% más rápido"],
+   lacks:["Arqueros de élite (sin Arbalesta)","Camellos","Escaramuzador Imperial"]},
+  {name:"Godos", focus:"Infantería (spam)", img:"Goths_AoE2.webp",
+   bonus:["Infantería −20/25/30/35% por edad","Infantería +1 ataque vs edificios","Cazadores cargan +15 carne","+10 población en Imperial"],
+   team:"Cuarteles trabajan +20% más rápido", uu:["Huscarl"],
+   ut:["Anarchy (Castillo): Huscarles desde el Cuartel","Perfusion (Imperial): Cuarteles producen +100% más rápido"],
+   lacks:["Defensas (sin Torre Bombardeo, Muralla de Piedra limitada)","Arqueros de élite"]},
+  {name:"Teutones", focus:"Infantería · Defensa", img:"Teutons_AoE2.webp",
+   bonus:["Monjes curan al doble de rango","Torres guarnecen el doble","Granjas cuestan −40%","Unidades resisten conversión"],
+   team:"Curación de Monjes 2x más rápida", uu:["Caballero Teutónico"],
+   ut:["Ironclad (Castillo): asedio +4 armadura perforante","Crenellations (Imperial): Castillos +3 alcance, infantería dispara desde ellos"],
+   lacks:["Caballería rápida (sin Húsar/Camello ligero)","Arqueros de élite","Escaramuzador Imperial"]},
+  {name:"Japoneses", focus:"Infantería · Pesca", img:"Japanese_AoE2.webp",
+   bonus:["Barcos pesqueros 2x HP y +trabajo","Molino/Campamento/Aserradero −50%","Infantería ataca +33% más rápido (desde Feudal)"],
+   team:"Barcos de pesca +5 línea de visión", uu:["Samurái"],
+   ut:["Yasama (Castillo): Castillos disparan flechas extra","Kataparuto (Imperial): Trabucos disparan y empacan más rápido"],
+   lacks:["Caballería de élite (sin Paladín)","Camellos"]},
+  {name:"Chinos", focus:"Todoterreno", img:"Chinese_AoE2.webp",
+   bonus:["Empiezan con +3 aldeanos (−200 comida −50 madera)","Tecnologías −5/10/15% por edad","Demoras y Aldeanos +ritmo"],
+   team:"Centros Urbanos sostienen +5 población", uu:["Chu Ko Nu"],
+   ut:["Great Wall (Castillo): murallas/torres +30% HP","Rocketry (Imperial): Chu Ko Nu +2 ataque, Asedio +4 ataque"],
+   lacks:["—"]},
+  {name:"Bizantinos", focus:"Defensa · Counter", img:"Byzantines_AoE2.webp",
+   bonus:["Unidades de counter (Piquero, Escaramuzador, Camello) −25%","Edificios +HP por edad","Barcos de Fuego +25% ataque","Curas de Monjes a la mitad de costo"],
+   team:"Curación de Monjes +50% más rápido", uu:["Catafracto"],
+   ut:["Greek Fire (Castillo): Barcos de Fuego +1 alcance","Logistica (Imperial): Catafractos daño en área a infantería"],
+   lacks:["Bono ofensivo claro (civ defensiva)"]},
+  {name:"Persas", focus:"Caballería", img:"Persians_AoE2.webp",
+   bonus:["Empiezan con +50 comida y +50 madera","Centro Urbano y muelle 2x HP y +trabajo","Caballeros +2 ataque vs arqueros (UT)"],
+   team:"Caballeros +2 ataque vs arqueros", uu:["Elefante de Guerra","Savar (Imperial)"],
+   ut:["Kamandaran (Castillo): Arqueros cuestan solo madera","Mahouts (Imperial): Elefantes de Guerra +30% velocidad"],
+   lacks:["Arqueros de élite limitados"]},
+  {name:"Sarracenos", focus:"Arqueros · Camellos · Naval", img:"Saracens_AoE2.webp",
+   bonus:["Mercado mejor tasa de trueque","Transportes 2x HP y ataque","Arqueros de Caballería +ataque vs edificios","Camellos +ataque vs edificios"],
+   team:"Arqueros a pie +2 ataque vs edificios", uu:["Mameluco"],
+   ut:["Madrasah (Castillo): Monjes devuelven oro al morir","Zealotry (Imperial): Mamelucos/Camellos +30 HP"],
+   lacks:["Caballería de élite (sin Paladín)"]},
+  {name:"Turcos", focus:"Pólvora", img:"Turks_AoE2.webp",
+   bonus:["Pólvora +25% HP y +ritmo","Oro dura +20% más","Químico gratis","Húsar mejora gratis","Aldeanos minan oro +ritmo"],
+   team:"Pólvora se crea +20% más rápido", uu:["Jenízaro"],
+   ut:["Sipahi (Castillo): Arqueros de Caballería +20% HP","Artillery (Imperial): pólvora +2 alcance"],
+   lacks:["Piqueros/Escaramuzadores/Camellos de élite (sin counters)","Monjes limitados"]},
+  {name:"Vikingos", focus:"Infantería · Naval", img:"Vikings_AoE2.webp",
+   bonus:["Barcos de guerra −15/20% por edad","Infantería +HP (Berserk: +%)","Carros de mano gratis"],
+   team:"Muelles cuestan −15%", uu:["Berserker","Barco Largo"],
+   ut:["Chieftains (Castillo): infantería +ataque vs caballería","Berserkergang (Imperial): Berserkers se regeneran más rápido"],
+   lacks:["Caballería de élite (sin Paladín, sin Camello)","Pólvora limitada"]},
+  {name:"Mongoles", focus:"Arqueros de Caballería", img:"Mongols_AoE2.webp",
+   bonus:["Arqueros de Caballería +25% ritmo de disparo","Caballería ligera +30% HP","Cazadores trabajan +50% más rápido"],
+   team:"Línea de visión de exploradores +2", uu:["Mangudai"],
+   ut:["Nomads (Castillo): casas destruidas no quitan población","Drill (Imperial): asedio +50% velocidad"],
+   lacks:["Caballería pesada de élite (sin Paladín)","Bono defensivo"]},
+  {name:"Celtas", focus:"Infantería · Asedio", img:"Celts_AoE2.webp",
+   bonus:["Infantería +15% velocidad","Asedio dispara +25% más rápido","Leñadores +15%","Pueden robar ovejas/jabalíes en rango enemigo"],
+   team:"Talleres de Asedio trabajan +20% más rápido", uu:["Merodeador Woad"],
+   ut:["Stronghold (Castillo): Castillos/torres disparan +25% más rápido","Furor Celtica (Imperial): asedio +40% HP"],
+   lacks:["Camellos","Arqueros de élite (sin Arbalesta)","Caballería de élite"]},
+  {name:"Españoles", focus:"Pólvora · Caballería", img:"Spanish_AoE2.webp",
+   bonus:["Aldeanos construyen +30% más rápido","Pólvora +ritmo de disparo","Misioneros (monjes a caballo)","Comercio no devuelve oro pero da +33%"],
+   team:"Mercaderes/Misioneros +trabajo", uu:["Conquistador","Misionero"],
+   ut:["Inquisition (Castillo): Monjes convierten más rápido","Supremacy (Imperial): Aldeanos pelean mejor"],
+   lacks:["Escaramuzador de élite limitado","Arqueros de Caballería"]},
+  {name:"Hunos", focus:"Arqueros de Caballería · Caballería", img:"Huns_AoE2.webp",
+   bonus:["No necesitan casas (empiezan −100 madera)","Arqueros de Caballería −10/20% por edad","Establos +ritmo de creación"],
+   team:"Establos trabajan +20% más rápido", uu:["Tarkan"],
+   ut:["Marauders (Castillo): Tarkanes desde el Establo","Atheism (Imperial): +100 años a victoria de reliquia/maravilla, espías −50%"],
+   lacks:["Defensas limitadas","Arqueros a pie de élite"]},
+  {name:"Coreanos", focus:"Torres · Naval", img:"Koreans_AoE2.webp",
+   bonus:["Torres mejoran gratis y +alcance","Aldeanos minan piedra +ritmo","Asedio onagro/mangonel +alcance"],
+   team:"Torres de vigía gratis", uu:["Barco Tortuga","Vagón de Guerra"],
+   ut:["Eupseong (Castillo): torres +1 alcance","Shinkichon (Imperial): Mangonales +1 alcance"],
+   lacks:["Camellos","caballería de élite limitada"]},
+  {name:"Italianos", focus:"Naval · Pólvora", img:"Italians_AoE2.webp",
+   bonus:["Avance de edad −15%","Pesca/Muelle −15/25%","Mercaderes/Galeón de Cañones más baratos","Químico gratis"],
+   team:"Galeón de Cañones cuesta −20%", uu:["Ballestero Genovés","Condotiero"],
+   ut:["Pavise (Castillo): arqueros/Ballestero Genovés +1 armadura","Silk Road (Imperial): comercio −50% costo"],
+   lacks:["Caballería de élite (sin Paladín)","Camellos limitados"]},
+  {name:"Indios", focus:"Camellos · Pólvora", img:"Hindustanis_AoE2.webp",
+   bonus:["Aldeanos −10/15/20/25% por edad","Camellos +1 armadura perforante","Establos +ritmo (UT)","Pescadores +ritmo"],
+   team:"Camellos/Elefantes se mueven +10% más rápido", uu:["Ghulam","Camello Imperial"],
+   ut:["Sultans (Castillo): +10% oro de todas las fuentes","Shatagni (Imperial): Artilleros de Mano +1 alcance"],
+   lacks:["Caballería de élite (sin Paladín)","Arqueros a pie de élite limitados"]},
+  {name:"Eslavos", focus:"Infantería · Asedio", img:"Slavs_AoE2.webp",
+   bonus:["Granjeros +15% comida","Asedio −15%","Tropa de suministros gratis (UT)"],
+   team:"Unidades militares sostienen +5 población", uu:["Boyardo"],
+   ut:["Detinets (Castillo): edificios de defensa cuestan menos piedra","Druzhina (Imperial): infantería daño en área"],
+   lacks:["Arqueros de Caballería de élite","Camellos","Pólvora limitada"]},
+  {name:"Magiares", focus:"Caballería · Exploradores", img:"Magyars_AoE2.webp",
+   bonus:["Caballería de exploración −15%","Aldeanos matan lobos de un golpe","Mejoras de ataque de arquero gratis"],
+   team:"Arqueros a pie +2 línea de visión", uu:["Húsar Magiar"],
+   ut:["Corvinian Army (Castillo): Magyar Húsar no cuesta oro","Recurve Bow (Imperial): Arqueros de Caballería +1 alcance/ataque"],
+   lacks:["Pólvora (sin Artillero/Bombardeo)","Camellos","Elefantes"]},
+  {name:"Portugueses", focus:"Naval · Pólvora", img:"Portuguese_AoE2.webp",
+   bonus:["Todas las unidades cuestan −15% oro","Barcos +10% HP","Revelan mapa al avanzar de edad (UT)"],
+   team:"Aliados ven línea de visión de tus edificios", uu:["Cañón de Órgano","Carabela"],
+   ut:["Carrack (Castillo): barcos +1 armadura","Arquebus (Imperial): pólvora apunta mejor a unidades en movimiento"],
+   lacks:["Caballería de élite (sin Paladín)","Camellos"]},
+  {name:"Etíopes", focus:"Arqueros · Asedio", img:"Ethiopians_AoE2.webp",
+   bonus:["Arqueros disparan +18% más rápido","Reciben +100 comida y oro al avanzar de edad","Torre de Bombardeo y Cañón gratis (UT)"],
+   team:"Talleres de Asedio trabajan +25% más rápido", uu:["Guerrero Shotel"],
+   ut:["Royal Heirs (Castillo): Guerreros Shotel se crean casi al instante","Torsion Engines (Imperial): asedio +radio de daño"],
+   lacks:["Caballería de élite (sin Paladín)","Camellos limitados"]},
+  {name:"Malienses", focus:"Infantería · Camellos", img:"Malians_AoE2.webp",
+   bonus:["Infantería +armadura por edad","Minas de oro duran +30%","Edificios de madera −15%","Camellos +HP (UT)"],
+   team:"Universidades trabajan +80% más rápido", uu:["Gbeto"],
+   ut:["Farimba (Castillo): caballería +5 ataque","Tigui (Imperial): Centros Urbanos disparan flechas sin guarnición"],
+   lacks:["Arqueros de Caballería de élite","Pólvora limitada"]},
+  {name:"Bereberes", focus:"Caballería · Naval", img:"Berbers_AoE2.webp",
+   bonus:["Caballería −15/20% por edad (Castillo/Imperial)","Barcos +10% velocidad","Aldeanos +10% velocidad de movimiento"],
+   team:"Establos trabajan +15% más rápido", uu:["Arquero Camello","Genitour"],
+   ut:["Kasbah (Castillo): Castillos de equipo trabajan +25% más rápido","Maghrabi Camels (Imperial): camellos se regeneran"],
+   lacks:["Arqueros a pie de élite","Pólvora limitada"]},
+  {name:"Burgondios", focus:"Caballería · Economía", img:"Burgundians_AoE2.webp",
+   bonus:["Mejoras económicas un edad antes y −%","Caballería tiene mejoras de pólvora","Diezmo: aldeanos generan oro (UT)"],
+   team:"Establos −50% para reliquias? (oro de reliquias)", uu:["Caballero de Coustillier","Milicia Flamenca"],
+   ut:["Burgundian Vineyards (Castillo): comida convertida en oro","Flemish Revolution (Imperial): aldeanos → Milicia Flamenca"],
+   lacks:["Arqueros de élite limitados"]},
+  {name:"Sicilianos", focus:"Infantería · Caballería · Defensa", img:"Sicilians_AoE2.webp",
+   bonus:["Edificios se construyen +100% más rápido","Unidades reciben −50% del daño de bonus","Granjas dan +trabajo extra"],
+   team:"Transportes +5 capacidad y +HP", uu:["Sargento","Caballero Normando"],
+   ut:["First Crusade (Castillo): Centros Urbanos generan Sargentos","Hauberk (Imperial): caballería +1 armadura"],
+   lacks:["Arqueros de Caballería de élite","Pólvora limitada"]},
+  {name:"Gurjaras", focus:"Camellos · Elefantes", img:"Gurjaras_AoE2.webp",
+   bonus:["Pastoreo da +50% comida","Aldeanos cazan más rápido","Camellos/Elefantes contraatacan","Forrajeo +ritmo"],
+   team:"Establos +15% velocidad de creación", uu:["Jinete Shrivamsha","Lanzador de Chakram"],
+   ut:["Kshatriyas (Castillo): unidades militares cuestan −25% comida","Frontier Guards (Imperial): camellos/elefantes +6 armadura vs ataques de bonus"],
+   lacks:["Arqueros a pie de élite limitados"]},
+  {name:"Bengalíes", focus:"Elefantes", img:"Bengalis_AoE2.webp",
+   bonus:["Elefantes resisten conversión y reciben −25% daño de bonus","Aldeanos generan algo de comida por edad","Barcos de transporte gratis (UT)"],
+   team:"Reciben 2 aldeanos al avanzar a Feudal", uu:["Ratha","Elefante de Asedio"],
+   ut:["Paiks (Castillo): elefantes/UU atacan más rápido","Mahayana (Imperial): aldeanos cuentan como menos población"],
+   lacks:["Caballería ligera de élite","Pólvora limitada"]},
+  {name:"Dravidios", focus:"Infantería · Naval", img:"Dravidians_AoE2.webp",
+   bonus:["Reciben +200 madera al avanzar de edad","Barcos de pesca +trabajo","Infantería ataca +ritmo (UT)","Honderos/Arqueros sin penalización"],
+   team:"Pescadores trabajan +15% más rápido", uu:["Espadachín Urumi","Thirisadai"],
+   ut:["Medical Corps (Castillo): elefantes se regeneran","Wootz Steel (Imperial): infantería/camellos ignoran armadura"],
+   lacks:["Caballería de élite (sin Paladín/Camello pesado)"]},
+  {name:"Armenios", focus:"Infantería · Naval", img:"Armenians_AoE2.webp",
+   bonus:["Reciben tec. única gratis por edad","Monasterios/edificios religiosos mejorados","Barcos +ritmo de disparo (UT)"],
+   team:"Reliquias +ritmo de oro", uu:["Arquero Compuesto","Sacerdote Guerrero"],
+   ut:["Cilician Fleet (Castillo): barcos +ataque/alcance","Fereters (Imperial): Guardias del Templo +daño en área"],
+   lacks:["Caballería de élite limitada"]},
+  {name:"Georgianos", focus:"Caballería · Defensa", img:"Georgians_AoE2.webp",
+   bonus:["Unidades en colinas reciben menos daño","Edificios se reparan solos","Reciben comida al avanzar de edad"],
+   team:"Maravillas/Castillos cuestan −20%", uu:["Monaspa"],
+   ut:["Svan Towers (Castillo): torres disparan proyectiles de área","Aznauri Cavalry (Imperial): caballería ignora daño de bonus en colinas"],
+   lacks:["Arqueros de Caballería de élite","Pólvora limitada"]},
+  {name:"Lituanos", focus:"Caballería · Monjes", img:"Lithuanians_AoE2.webp",
+   bonus:["Empiezan con +150 comida","Piqueros/Caballería ligera +1 velocidad","Cada reliquia da +1 ataque a Caballeros (hasta +4)"],
+   team:"Monasterios trabajan +20% más rápido", uu:["Leitis"],
+   ut:["Hill Forts (Castillo): Centros Urbanos +3 alcance","Tower Shields (Imperial): Piqueros/Escaramuzadores +1/+2 armadura"],
+   lacks:["Arqueros de Caballería de élite","Pólvora limitada"]},
+  {name:"Polacos", focus:"Caballería · Economía", img:"Poles_AoE2.webp",
+   bonus:["Minas de oro: aldeanos generan oro extra","Establos −ritmo (UT)","Caballería ligera +1 armadura perforante por edad"],
+   team:"Caballería ligera ataca +ritmo (?)", uu:["Obuch","Húsar Alado"],
+   ut:["Szlachta Privileges (Castillo): Caballeros Obúk cuestan menos oro","Lechitic Legacy (Imperial): caballería ligera daño en área"],
+   lacks:["Arqueros a pie de élite limitados"]},
+  {name:"Tártaros", focus:"Arqueros de Caballería", img:"Tatars_AoE2.webp",
+   bonus:["Unidades en colina +50% daño de bonus","Reciben oveja extra al matar ganado","Escaramuzadores/Arqueros de Caballería +1 alcance (Imperial)"],
+   team:"Caballería tiene +2 línea de visión", uu:["Keshik","Camello en Llamas"],
+   ut:["Silk Armor (Castillo): unidades de caballería montada +1/+2 armadura","Timurid Siegecraft (Imperial): Trabucos +4 alcance, Mangonales +1 alcance"],
+   lacks:["Caballería pesada de élite (sin Paladín)"]},
+  {name:"Cumanos", focus:"Caballería", img:"Cumans_AoE2.webp",
+   bonus:["Pueden construir 2 Centros Urbanos en Feudal","Caballería +ritmo de creación (Imperial)","Capital Towns (UT)"],
+   team:"Capital permite Carro de Batalla? (Palisade +ritmo)", uu:["Kipchak"],
+   ut:["Steppe Husbandry (Castillo): caballería ligera/Arqueros de Caballería +ritmo creación","Cuman Mercenaries (Imperial): Kipchaks de equipo gratis"],
+   lacks:["Defensas limitadas","Arqueros a pie de élite"]},
+  {name:"Búlgaros", focus:"Infantería · Caballería", img:"Bulgarians_AoE2.webp",
+   bonus:["Herrería/mejoras de fundición militares gratis","Cuarteles −50% piedra para Krepost","Líneas de milicia mejoran gratis"],
+   team:"Talleres de Asedio/Cuarteles trabajan +ritmo", uu:["Konnik","Lancero de Estepa"],
+   ut:["Stirrups (Castillo): caballería ataca +33% más rápido","Bagains (Imperial): Milicia +5 armadura"],
+   lacks:["Arqueros de élite limitados","Pólvora limitada"]},
+  {name:"Jemeres", focus:"Elefantes · Asedio", img:"Khmer_AoE2.webp",
+   bonus:["No necesitan edificios para avanzar tecnologías (sin prerequisitos)","Aldeanos pueden guarecerse en Centro Urbano? no — Granjas +trabajo","Escorpiones disparan a través de unidades"],
+   team:"Exploradores revelan más mapa", uu:["Elefante Balista","Elefante de Batalla (acceso)"],
+   ut:["Tusk Swords (Castillo): Elefantes de Batalla +ataque","Double Crossbow (Imperial): Escorpiones disparan 2 proyectiles"],
+   lacks:["Arqueros de Caballería de élite","Defensas limitadas"]},
+  {name:"Birmanos", focus:"Elefantes · Monjes · Infantería", img:"Burmese_AoE2.webp",
+   bonus:["Mejoras de Herrería de ataque gratis","Monasterio tec. −50%","Infantería +ataque por edad (UT)"],
+   team:"Reliquias visibles en el mapa", uu:["Arambai"],
+   ut:["Manipur Cavalry (Castillo): caballería/Arambai +ataque vs arqueros","Howdah (Imperial): Elefantes de Batalla +armadura"],
+   lacks:["Arqueros a pie de élite (sin Arbalesta)","defensas limitadas"]},
+  {name:"Malayos", focus:"Elefantes · Naval", img:"Malay_AoE2.webp",
+   bonus:["Avance de edad +66% más rápido","Pescaderías ilimitadas y baratas","Elefantes cuestan −30/40%"],
+   team:"Línea de muelle +100% línea de visión", uu:["Guerrero Karambit","Elefante de Batalla (acceso)"],
+   ut:["Thalassocracy (Castillo): Muelles → Harbor (disparan flechas)","Forced Levy (Imperial): Milicia no cuesta oro"],
+   lacks:["Caballería de élite (sin Paladín)","Pólvora limitada"]},
+  {name:"Vietnamitas", focus:"Arqueros", img:"Vietnamese_AoE2.webp",
+   bonus:["Revelan posiciones enemigas al inicio","Arqueros (no UU) +20% HP","Imperial Skirmisher disponible","Economía: Conscription gratis"],
+   team:"Las mejoras de Balística/Ataque de arquero se comparten? (Aldeanos +ritmo)", uu:["Arquero de Rotán","Escaramuzador Imperial"],
+   ut:["Chatras (Castillo): Elefantes de Batalla +HP","Paper Money (Imperial): genera oro para aliados"],
+   lacks:["Caballería de élite (sin Paladín)"]},
+  {name:"Bohemios", focus:"Pólvora · Monjes", img:"Bohemians_AoE2.webp",
+   bonus:["Mercado/Minería tec. más baratas","Aldeanos minando comen menos? (Herrería/Universidad tec. comparten requisitos)","Pólvora disponible un edad antes"],
+   team:"Universidades tec. −ritmo", uu:["Carro Husita","Houfnice"],
+   ut:["Wagenburg Tactics (Castillo): pólvora se mueve +ritmo","Hussite Reforms (Imperial): Monjes-aldeanos? (sanadores)"],
+   lacks:["Caballería de élite (sin Paladín)","Camellos"]},
+  {name:"Romanos", focus:"Infantería · todoterreno", img:"Romans_AoE2.webp",
+   bonus:["Legionario reemplaza líneas? no — Infantería +ritmo de ataque con números","Aldeanos construyen Centros más baratos","Ballesteros/Escorpiones mejorados"],
+   team:"Galeras +ritmo de disparo", uu:["Legionario","Centurión (Imperial)"],
+   ut:["Ballistas (Castillo): Escorpiones +1 alcance, +ritmo","Comitatenses (Imperial): Legionarios +ataque vs infantería"],
+   lacks:["Camellos","Arqueros de Caballería de élite"]},
+  {name:"Jurchens", focus:"Caballería · Asedio", img:"Jurchens_AoE2.webp",
+   bonus:["Caballería pesada y asedio mejorados (civ de Chronicles/expansión)"],
+   team:"—", uu:["Pagoda de Hierro","Lancero de Fuego (regional)"],
+   ut:["—"],
+   lacks:["Datos limitados (civ nueva)"]},
+  {name:"Mapuche", focus:"Infantería ligera (Chronicles)", img:"Mapuche_AoE2.webp",
+   bonus:["Civ del nuevo mundo / Chronicles — datos limitados"],
+   team:"—", uu:["Jinete de Bolas"], ut:["—"], lacks:["Datos limitados (civ nueva)"]},
+  {name:"Muisca", focus:"Exploración (Chronicles)", img:"Muisca_AoE2.webp",
+   bonus:["Civ de Chronicles — datos limitados"],
+   team:"—", uu:["Guerrero Champi"], ut:["—"], lacks:["Datos limitados (civ nueva)"]},
+  {name:"Tupi", focus:"Infantería (Chronicles)", img:"Tupi_AoE2.webp",
+   bonus:["Civ de Chronicles — datos limitados"],
+   team:"—", uu:["Guerrero Ibirapema"], ut:["—"], lacks:["Datos limitados (civ nueva)"]},
+];
+
+const ALL_UNITS = [
+  ...infantry.map(u=>({...u,cat:"infantry"})),
+  ...cavalry.map(u =>({...u,cat:"cavalry"})),
+  ...archers.map(u =>({...u,cat:"archers"})),
+  ...siege.map(u   =>({...u,cat:"siege"})),
+  ...naval.map(u   =>({...u,cat:"naval"})),
+];
+
+// ═══════ RENDER ═══════
+const CAT_ICON = {infantry:"⚔",cavalry:"🐴",archers:"🏹",siege:"💣",naval:"⚓"};
+const CARD_DATA = {};
+let _cseq = 0;
+
+function spdClass(s){
+  const f=s.toLowerCase();
+  if(f.includes("rápida")) return "fast";
+  if(f.includes("lenta"))  return "slow";
+  return "";
+}
+
+// coste efectivo de la línea: el de la línea, o el de cualquier tier que lo tenga
+// (los costes son iguales en todos los tiers de una misma línea)
+function lineCostOf(u){
+  return u.cost || (u.units.find(x=>x.cost)||{}).cost || null;
+}
+
+function buildStatsList(t, lineCost){
+  const cost = t.cost || lineCost;
+  return [
+    {l:"HP",   v:t.hp},
+    {l:"ATK",  v:t.atk},
+    t.rng!=null ? {l:"Rango", v:t.rng} : null,
+    t.acc!=null ? {l:"Prec.", v:t.acc} : null,
+    {l:"Arm.", v:`${t.arm}/${t.pie}`},
+    {l:"Vel.", v:t.spd, cls:spdClass(t.spd)},
+    cost ? {l:"Coste", v:cost, cls:"gold"} : null,
+  ].filter(Boolean)
+   .map(s=>`<div class="st"><span class="st-l">${s.l}</span><span class="st-v ${s.cls||""}">${s.v}</span></div>`)
+   .join("");
+}
+
+function buildCountersHtml(strong, weak){
+  return `<div><div class="ctr-label strong">✓ Fuerte contra</div><div class="tags">${strong.map(x=>`<span class="tag s">${x}</span>`).join("")}</div></div>
+<div><div class="ctr-label weak">✗ Débil contra</div><div class="tags">${weak.map(x=>`<span class="tag w">${x}</span>`).join("")}</div></div>`;
+}
+
+function buildCard(u){
+  const id = `c${++_cseq}`;
+  CARD_DATA[id] = u;
+  const defIdx = 0;
+  const tier   = u.units[defIdx];
+
+  const imgSrc = tier.img || u.img;
+  const imgEl  = imgSrc
+    ? `<img class="card-img" id="${id}-img" src="${IMG}${imgSrc}" alt="" onerror="this.style.display='none';document.getElementById('${id}-ph').style.display='flex'">`
+    : "";
+  const ph = `<div class="card-ph" id="${id}-ph" ${imgSrc?'style="display:none"':''}>${CAT_ICON[u.cat]||"⚔"}</div>`;
+
+  const civImg = u.civ && CIV_IMGS[u.civ]
+    ? `<img src="${IMG}${CIV_IMGS[u.civ]}" onerror="this.style.display='none'" alt="">` : "";
+  const civBadge  = u.civ  ? `<span class="badge badge-civ">${civImg}${u.civ}</span>` : "";
+  const noteBadge = u.note ? `<span class="badge badge-note">${u.note}</span>` : "";
+
+  // upgrade chain — cada tier es un botón clickeable
+  const chain = u.units.map((x,i)=>{
+    const isLast = i === u.units.length-1;
+    const cls = `upg${isLast?" elite":""}${i===defIdx?" active":""}`;
+    const sep = i < u.units.length-1 ? '<span class="arr">›</span>' : "";
+    return `<button class="${cls}" onclick="selectTier('${id}',${i})">${x.name}</button>${sep}`;
+  }).join("");
+
+  const strong = tier.strong || u.strong;
+  const weak   = tier.weak   || u.weak;
+  const search = [u.name, u.civ, ...u.units.map(x=>x.name)].filter(Boolean).join(" ").toLowerCase();
+
+  return `
+<div class="card" id="${id}" data-search="${search}" data-cat="${u.cat||""}">
+  <div class="card-head">
+    ${imgEl}${ph}
+    <div class="card-title-block">
+      <div class="card-name">${u.name}</div>
+      <div class="badges">${civBadge}${noteBadge}</div>
+    </div>
+  </div>
+  <div class="upgrades">${chain}</div>
+  <div class="stats" id="${id}-stats">${buildStatsList(tier, lineCostOf(u))}</div>
+  <div class="counters" id="${id}-ctr">${buildCountersHtml(strong,weak)}</div>
+</div>`;
+}
+
+// ── Selección de tier ──
+function selectTier(cardId, idx){
+  const u    = CARD_DATA[cardId];
+  const tier = u.units[idx];
+  const card = document.getElementById(cardId);
+
+  // resaltar badge activo
+  card.querySelectorAll(".upg").forEach((b,i)=>b.classList.toggle("active",i===idx));
+
+  // actualizar imagen
+  const imgSrc = tier.img || u.img;
+  const imgEl  = document.getElementById(`${cardId}-img`);
+  const phEl   = document.getElementById(`${cardId}-ph`);
+  if(imgSrc){
+    if(imgEl){ imgEl.src=IMG+imgSrc; imgEl.style.display=""; }
+    else{
+      // crear img si no existía
+      const newImg = document.createElement("img");
+      newImg.className="card-img"; newImg.id=`${cardId}-img`;
+      newImg.src=IMG+imgSrc; newImg.alt="";
+      newImg.onerror=function(){ this.style.display="none"; if(phEl) phEl.style.display="flex"; };
+      card.querySelector(".card-head").prepend(newImg);
+    }
+    if(phEl) phEl.style.display="none";
+  } else {
+    if(imgEl) imgEl.style.display="none";
+    if(phEl)  phEl.style.display="flex";
+  }
+
+  // actualizar stats
+  document.getElementById(`${cardId}-stats`).innerHTML = buildStatsList(tier, lineCostOf(u));
+
+  // actualizar counters (usa los del tier si existen, si no los de la línea)
+  const strong = tier.strong || u.strong;
+  const weak   = tier.weak   || u.weak;
+  document.getElementById(`${cardId}-ctr`).innerHTML = buildCountersHtml(strong, weak);
+}
+
+function fillGrid(id,data){ document.getElementById(id).innerHTML=data.map(u=>buildCard(u)).join(""); }
+
+function fillAnimals(){
+  const labels={herd:"🐑 Pastoreables",hunt:"🏹 Cazables — Comestibles",inedible:"⚠ Cazables — No Comestibles"};
+  let last=null,html="";
+  animals.forEach(a=>{
+    if(a.type!==last){ html+=`<tr class="group-row"><td colspan="4">${labels[a.type]}</td></tr>`; last=a.type; }
+    const foodCell=a.food?`<td class="food-val">${a.food} 🍖</td>`:`<td class="inedible-val">No comestible</td>`;
+    html+=`<tr>
+      <td>${a.name}${a.note?` <span style="color:#e07070;font-size:.75rem">${a.note}</span>`:""}</td>
+      <td>${a.hunters} cazador${(a.hunters>1||typeof a.hunters==="string")?"es":""}</td>
+      ${foodCell}
+      <td style="color:var(--dim)">${a.type==="herd"?"Pastoreable":a.type==="hunt"?"Cazable":"No comestible"}</td>
+    </tr>`;
+  });
+  document.getElementById("animals-tbody").innerHTML=html;
+}
+
+// ═══════ BÚSQUEDA GLOBAL ═══════
+function globalSearch(q){
+  q=q.trim().toLowerCase();
+  const sr=document.getElementById("search-results");
+  const info=document.getElementById("gsb-info");
+  const tabs=document.querySelectorAll(".section");
+  if(!q){
+    sr.style.display="none"; sr.innerHTML="";
+    tabs.forEach(s=>s.style.display=s.classList.contains("active")?"block":"none");
+    info.textContent=""; return;
+  }
+  tabs.forEach(s=>s.style.display="none");
+  sr.style.display="block";
+  const results=ALL_UNITS.filter(u=>[u.name,u.civ,...u.units.map(x=>x.name)].filter(Boolean).join(" ").toLowerCase().includes(q));
+  if(!results.length){
+    sr.innerHTML=`<div class="sr-empty">🔍 Sin resultados para "<strong>${q}</strong>"</div>`;
+    info.textContent="Sin resultados"; return;
+  }
+  info.textContent=`${results.length} resultado${results.length!==1?"s":""} en todas las categorías`;
+  const byCat={};
+  results.forEach(u=>{ if(!byCat[u.cat])byCat[u.cat]=[]; byCat[u.cat].push(u); });
+  let html="";
+  ["infantry","cavalry","archers","siege","naval"].forEach(cat=>{
+    if(!byCat[cat])return;
+    const c=CATS[cat];
+    html+=`<div class="sr-cat-title"><span style="background:${c.bg};border:1px solid ${c.color};color:${c.color}">${c.label}</span>${byCat[cat].length} unidad${byCat[cat].length!==1?"es":""}</div>
+    <div class="unit-grid">${byCat[cat].map(u=>buildCard(u)).join("")}</div>`;
+  });
+  sr.innerHTML=html;
+}
+
+function clearSearch(){
+  const inp=document.getElementById("global-input");
+  inp.value=""; globalSearch(""); inp.focus();
+}
+
+// ═══════ NAV ═══════
+document.getElementById("nav").addEventListener("click",e=>{
+  const btn=e.target.closest("button"); if(!btn)return;
+  const inp=document.getElementById("global-input");
+  if(inp.value){ inp.value=""; globalSearch(""); }
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".section").forEach(s=>{ s.classList.remove("active"); s.style.display="none"; });
+  btn.classList.add("active");
+  const t=document.getElementById(btn.dataset.tab);
+  t.classList.add("active"); t.style.display="block";
+  if(btn.dataset.tab==="techtree") ensureTechTree();
+});
+
+// ═══════ TECH TREE ═══════
+// Se incrusta aoe2techtree.net (en español). Carga diferida al abrir la pestaña.
+let _ttLoaded = false;
+function ensureTechTree(){
+  if(_ttLoaded) return;
+  _ttLoaded = true;
+  document.getElementById("tt-frame").src = "https://aoe2techtree.net/?lng=es";
+}
+
+// ═══════ ASISTENTE IA ═══════
+const AI_HISTORY = [];
+let AI_BUSY = false;
+const AI_SUGGESTIONS = [
+  "¿Cómo contrarresto a los Caballeros?",
+  "¿Qué me conviene hacer con Mayas?",
+  "Mejores civs de caballería",
+  "¿Qué unidad le gana al Mangudai?",
+];
+
+// API key: se lee de config.js (window.AOE_API_KEY), archivo local NO versionado.
+// Si no existe config.js ni hay clave guardada, el chat pide la clave en ⚙.
+const DEFAULT_AI_KEY = (typeof window !== "undefined" && window.AOE_API_KEY) ? window.AOE_API_KEY : "";
+
+function esc(s){ return String(s).replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m])); }
+function aiKey(){ return localStorage.getItem("aoe_ai_key") || DEFAULT_AI_KEY; }
+function aiModel(){ return localStorage.getItem("aoe_ai_model")||"claude-sonnet-4-6"; }
+
+function toggleAI(){
+  const p=document.getElementById("ai-panel");
+  p.classList.toggle("open");
+  if(p.classList.contains("open")){
+    if(!aiKey()){ openAISettings(); }
+    else { showChat(); if(!AI_HISTORY.length) greet(); document.getElementById("ai-input").focus(); }
+  }
+}
+function showChat(){ document.getElementById("ai-body").style.display="flex"; document.getElementById("ai-settings").style.display="none"; }
+function openAISettings(){
+  document.getElementById("ai-body").style.display="none";
+  document.getElementById("ai-settings").style.display="flex";
+  document.getElementById("ai-key").value = aiKey();
+  document.getElementById("ai-model").value = aiModel();
+}
+function saveAISettings(){
+  const k=document.getElementById("ai-key").value.trim();
+  const m=document.getElementById("ai-model").value;
+  if(k) localStorage.setItem("aoe_ai_key",k);
+  localStorage.setItem("aoe_ai_model",m);
+  showChat();
+  if(!AI_HISTORY.length) greet();
+  document.getElementById("ai-input").focus();
+}
+function greet(){
+  addMsg("sys","Asistente de Age of Empires II DE. Conozco todas las unidades, counters y civilizaciones de esta página. Preguntame lo que quieras.");
+  renderSuggestions();
+}
+function renderSuggestions(){
+  document.getElementById("ai-suggest").innerHTML =
+    AI_SUGGESTIONS.map(s=>`<button onclick="aiQuick(this)">${esc(s)}</button>`).join("");
+}
+function aiQuick(btn){ document.getElementById("ai-input").value=btn.textContent; aiSend(); }
+
+function addMsg(type,text){
+  const box=document.getElementById("ai-msgs");
+  const div=document.createElement("div");
+  div.className="ai-msg "+type;
+  if(type==="bot"){
+    div.innerHTML = esc(text).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/^- /gm,"• ");
+  } else {
+    div.textContent = text;
+  }
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+  return div;
+}
+function aiAutogrow(el){ el.style.height="auto"; el.style.height=Math.min(el.scrollHeight,110)+"px"; }
+function aiInputKey(e){ if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); aiSend(); } }
+
+// Contexto: serializa unidades + civilizaciones de la página para el modelo
+function buildAIContext(){
+  let s = "Sos un asistente experto en Age of Empires II: Definitive Edition. Respondé SIEMPRE en español, claro y conciso, con recomendaciones concretas. Usá los DATOS DE LA PÁGINA de abajo como fuente principal para counters y civilizaciones; podés complementar con tu conocimiento del juego. Si te preguntan qué hacer con una civ, sugerí estrategia, unidades clave y composiciones.\n\nTenés una herramienta de búsqueda web limitada a la wiki oficial 'ageofempires.fandom.com'. Usala SOLO cuando la pregunta pida detalles que no están en los datos de abajo (lore, datos históricos, detalles finos de tecnologías, árbol tecnológico exacto, cambios de versión). Para counters y datos generales de civs ya tenés todo acá: NO busques de gusto. Cuando uses la wiki, citá la fuente.\n\n";
+  s += "=== UNIDADES Y COUNTERS ===\n";
+  const catName={infantry:"Infantería",cavalry:"Caballería",archers:"Arqueros",siege:"Asedio",naval:"Naval"};
+  ALL_UNITS.forEach(u=>{
+    const tiers=u.units.map(t=>t.name).join(" › ");
+    const base=u.units[0], top=u.units[u.units.length-1];
+    const st=t=>`HP${t.hp}/Atk${t.atk}${t.rng!=null?`/Rng${t.rng}`:""}/Arm${t.arm}-${t.pie}`;
+    s += `• [${catName[u.cat]}] ${u.name}${u.civ?` (${u.civ})`:""}: ${tiers}. `;
+    s += `Base ${st(base)}${u.units.length>1?`; Élite ${st(top)}`:""}. `;
+    s += `Fuerte vs: ${(u.strong||[]).join(", ")||"—"}. Débil vs: ${(u.weak||[]).join(", ")||"—"}.\n`;
+  });
+  s += "\n=== CIVILIZACIONES ===\n";
+  CIVS.forEach(c=>{
+    s += `• ${c.name} [${c.focus}]: Bonos: ${(c.bonus||[]).join("; ")||"—"}. Equipo: ${c.team||"—"}. UU: ${(c.uu||[]).join(", ")||"—"}. UT: ${(c.ut||[]).join("; ")||"—"}. Le falta: ${(c.lacks||[]).join(", ")||"—"}.\n`;
+  });
+  return s;
+}
+
+async function aiSend(){
+  const inp=document.getElementById("ai-input");
+  const q=inp.value.trim();
+  if(!q || AI_BUSY) return;
+  if(!aiKey()){ openAISettings(); return; }
+  document.getElementById("ai-suggest").innerHTML="";
+  inp.value=""; aiAutogrow(inp);
+  addMsg("user",q);
+  AI_HISTORY.push({role:"user",content:q});
+  AI_BUSY=true; document.getElementById("ai-send").disabled=true;
+  const typing=document.createElement("div");
+  typing.className="ai-typing"; typing.textContent="Pensando…";
+  document.getElementById("ai-msgs").appendChild(typing);
+
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{
+        "content-type":"application/json",
+        "x-api-key":aiKey(),
+        "anthropic-version":"2023-06-01",
+        "anthropic-dangerous-direct-browser-access":"true"
+      },
+      body:JSON.stringify({
+        model:aiModel(),
+        max_tokens:1024,
+        system:buildAIContext(),
+        messages:AI_HISTORY,
+        tools:[{
+          type:"web_search_20250305",
+          name:"web_search",
+          max_uses:4,
+          allowed_domains:["ageofempires.fandom.com"]
+        }]
+      })
+    });
+    typing.remove();
+    const data=await res.json();
+    if(!res.ok || data.error){
+      const m=(data.error&&data.error.message)||`Error ${res.status}`;
+      addMsg("err","⚠ "+m+(res.status===401?" — revisá tu API key en ⚙":""));
+      AI_HISTORY.pop();
+    } else {
+      const blocks=data.content||[];
+      const text=blocks.filter(b=>b.type==="text").map(b=>b.text).join("\n").trim() || "(respuesta vacía)";
+      const searched=blocks.some(b=>b.type==="server_tool_use"||b.type==="web_search_tool_result");
+      addMsg("bot",text+(searched?"\n\n🔎 consultado en la wiki de AoE":""));
+      AI_HISTORY.push({role:"assistant",content:text});
+    }
+  }catch(err){
+    typing.remove();
+    addMsg("err","⚠ No se pudo conectar: "+err.message+". Verificá tu conexión.");
+    AI_HISTORY.pop();
+  }finally{
+    AI_BUSY=false; document.getElementById("ai-send").disabled=false;
+  }
+}
+
+// ═══════ INIT ═══════
+fillGrid("infantry-grid",infantry);
+fillGrid("cavalry-grid", cavalry);
+fillGrid("archers-grid", archers);
+fillGrid("siege-grid",   siege);
+fillGrid("naval-grid",   naval);
+fillAnimals();
+</script>
+</body>
+</html>
