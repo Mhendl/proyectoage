@@ -2088,12 +2088,16 @@ const DEFAULT_AI_KEY = (typeof window !== "undefined" && window.AOE_API_KEY) ? w
 function esc(s){ return String(s).replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m])); }
 function aiKey(){ return localStorage.getItem("aoe_ai_key") || DEFAULT_AI_KEY; }
 function aiModel(){ return localStorage.getItem("aoe_ai_model")||"claude-sonnet-4-6"; }
+// En el sitio publicado (http/https) se usa el proxy del servidor, que agrega la API key
+// del lado del servidor (oculta). En local (file://) se usa la key de config.js / ⚙.
+const AI_PROXY = (location.protocol==="http:"||location.protocol==="https:");
+const AI_PROXY_URL = "/api/anthropic";
 
 function toggleAI(){
   const p=document.getElementById("ai-panel");
   p.classList.toggle("open");
   if(p.classList.contains("open")){
-    if(!aiKey()){ openAISettings(); }
+    if(!AI_PROXY && !aiKey()){ openAISettings(); }
     else { showChat(); if(!AI_HISTORY.length) greet(); document.getElementById("ai-input").focus(); }
   }
 }
@@ -2193,7 +2197,7 @@ async function aiSend(){
   const inp=document.getElementById("ai-input");
   const q=inp.value.trim();
   if(!q || AI_BUSY) return;
-  if(!aiKey()){ openAISettings(); return; }
+  if(!AI_PROXY && !aiKey()){ openAISettings(); return; }
   document.getElementById("ai-suggest").innerHTML="";
   inp.value=""; aiAutogrow(inp);
   addMsg("user",q);
@@ -2206,9 +2210,9 @@ async function aiSend(){
   document.getElementById("ai-msgs").scrollTop=document.getElementById("ai-msgs").scrollHeight;
 
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
+    const res=await fetch(AI_PROXY ? AI_PROXY_URL : "https://api.anthropic.com/v1/messages",{
       method:"POST",
-      headers:{
+      headers: AI_PROXY ? { "content-type":"application/json" } : {
         "content-type":"application/json",
         "x-api-key":aiKey(),
         "anthropic-version":"2023-06-01",
