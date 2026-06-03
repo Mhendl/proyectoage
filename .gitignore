@@ -1,6 +1,9 @@
 # Clave de API local — NO versionar
 config.js
 
+# Config local de Claude Code (puede contener credenciales) — NO versionar
+.claude/
+
 # Sistema / editor
 Thumbs.db
 .DS_Store
