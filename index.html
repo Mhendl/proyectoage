@@ -589,7 +589,7 @@ const CIV_IMGS = {
   "Mayas":"Mayans_AoE2.webp","Coreanos":"Koreans_AoE2.webp","Portugueses":"Portuguese_AoE2.webp",
   "Bereberes":"Berbers_AoE2.webp","Burgondios":"Burgundians_AoE2.webp","Sicilianos":"Sicilians_AoE2.webp",
   "Gurjaras":"Gurjaras_AoE2.webp","Bengalíes":"Bengalis_AoE2.webp","Magiares":"Magyars_AoE2.webp",
-  "Armenios":"Armenians_AoE2.webp","Jurchens":"Jurchens_AoE2.webp","Hunos":"Huns_AoE2.webp",
+  "Armenios":"Armenians_AoE2.webp","Jurchens":"Jurchens_AoE2.webp","Kitán":"Khitans_AoE2.webp","Hunos":"Huns_AoE2.webp",
   "Cumanos":"Cumans_AoE2.webp","Mapuche":"Mapuche_AoE2.webp","Vietnamitas":"Vietnamese_AoE2.webp",
   "Bohemios":"Bohemians_AoE2.webp","Dravidios":"Dravidians_AoE2.webp","Muisca":"Muisca_AoE2.webp",
   "Tupi":"Tupi_AoE2.webp","Búlgaros":"Bulgarians_AoE2.webp","Jemeres":"Khmer_AoE2.webp",
@@ -828,6 +828,15 @@ const infantry = [
     units:[{name:"Legionario", hp:75, atk:12, arm:2, pie:2, spd:"Lenta", cost:"50A 20O"}],
     strong:["Infantería","Unidades únicas melee","Línea Milicia","Edificios"],
     weak:  ["Arqueros","Hostigadores","Arqueros de Caballería","Mangonales","Caballería"]},
+
+  { name:"Liao Dao", civ:"Kitán", img:"Liao_Dao_AoE2.webp",
+    note:"Su ataque causa +9 de daño por sangrado en 3s (ignora armadura, acumulable); ataca lento. (stats aprox.)",
+    units:[
+      {name:"Liao Dao",       hp:60, atk:11, arm:1, pie:1, spd:"Lenta"},
+      {name:"Liao Dao Élite", hp:75, atk:13, arm:2, pie:1, spd:"Lenta", cost:"60A 40O"},
+    ],
+    strong:["Infantería","Caballería (sangrado)","Línea Milicia","Edificios","Elefantes (con Armadura Laminar)"],
+    weak:  ["Arqueros","Ballesteros","Artillero de Mano","Arqueros de Caballería","Hostigadores","Escorpiones"]},
 ];
 
 // ═══════ CABALLERÍA ═══════
@@ -1034,6 +1043,15 @@ const cavalry = [
     ],
     strong:["Infantería","Arqueros","Aldeanos","Asedio"],
     weak:  ["Piqueros","Alabarderos","Camellos","Monjes","Ballestero Genovés"]},
+
+  { name:"Kona", civ:"Mapuche", img:"Kona_AoE2.webp",
+    note:"+1 ataque por cada 15% de vida que le falte al objetivo; fuerte vs pólvora (caballería media tipo Keshik). (stats aprox.)",
+    units:[
+      {name:"Kona",       hp:110, atk:11, arm:1, pie:1, spd:"Rápida"},
+      {name:"Kona Élite", hp:130, atk:13, arm:2, pie:2, spd:"Rápida", cost:"70A 50O"},
+    ],
+    strong:["Pólvora (Artillero de Mano, Jenízaro)","Unidades heridas","Arqueros","Hostigadores","Asedio"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes","Caballería con bonos"]},
 ];
 
 // ═══════ ARQUEROS ═══════
@@ -1242,6 +1260,24 @@ const archers = [
     ],
     strong:["Arqueros","Hostigadores","Infantería a distancia","Aldeanos"],
     weak:  ["Melee cuerpo a cuerpo (cerca)","Cañón de Bombardeo","Onagros","Monjes"]},
+
+  { name:"Guerrero Guecha", civ:"Muisca", img:"Guecha_Warrior_AoE2.webp",
+    note:"Tira jabalinas a corto alcance (mucha armadura perforante); se regenera al morir un Guecha aliado cercano. (stats aprox.)",
+    units:[
+      {name:"Guerrero Guecha",       hp:50, atk:4, rng:4, acc:"90%", arm:0, pie:4, spd:"Media"},
+      {name:"Guerrero Guecha Élite", hp:60, atk:5, rng:5, acc:"90%", arm:0, pie:5, spd:"Media", cost:"55A 25O"},
+    ],
+    strong:["Arqueros","Hostigadores","Arqueros de Caballería","Infantería ligera"],
+    weak:  ["Caballería","Infantería","Asedio","Mangonales","Monjes"]},
+
+  { name:"Arquero de Madera Negra", civ:"Tupi", img:"Blackwood_Archer_AoE2.webp",
+    note:"Se entrena de a 2 (½ población c/u); dispara muy rápido pero es la unidad con menos HP del juego. (stats aprox.)",
+    units:[
+      {name:"Arquero de Madera Negra",       hp:20, atk:4, rng:5, acc:"90%", arm:0, pie:0, spd:"Media"},
+      {name:"Arquero de Madera Negra Élite", hp:25, atk:5, rng:5, acc:"90%", arm:0, pie:0, spd:"Media", cost:"30M 30O"},
+    ],
+    strong:["Infantería","Línea Milicia","Piqueros","Aldeanos","Unidades de poca armadura perforante"],
+    weak:  ["Hostigadores","Mangonales","Caballería","Arqueros de Caballería","Daño de área"]},
 ];
 
 // ═══════ ASEDIO ═══════
@@ -1316,6 +1352,14 @@ const siege = [
     note:"Máquina de asedio en forma de elefante",
     strong:["Edificios","Muros","Unidades melee en formación"],
     weak:  ["Piqueros","Monjes","Arqueros","Camellos","Mangudais"]},
+
+  { name:"Trabuco Montado", civ:"Kitán", img:"Mounted_Trebuchet_AoE2.webp",
+    note:"Asedio a camello: deja fuego en el suelo 10s (2/s a unidades, 4/s a edificios; ignora armadura). (stats aprox.)",
+    units:[
+      {name:"Trabuco Montado", hp:120, atk:40, rng:8, arm:1, pie:5, spd:"Media", cost:"180M 60O"},
+    ],
+    strong:["Edificios","Unidades agrupadas","Infantería lenta","Asedio"],
+    weak:  ["Caballería rápida","Arqueros de Caballería","Unidades dispersas","Mangudais"]},
 ];
 
 // ═══════ NAVAL ═══════
@@ -1756,14 +1800,18 @@ function isKnownUnit(text){
 function focusUnit(text){
   const id=resolveUnit(text);
   if(!id) return;
-  const navBtn=document.querySelector('nav button[data-tab="'+CARD_DATA[id].cat+'"]');
+  const card=document.getElementById(id);
+  if(!card) return;
+  // categoría: del dato, o deducida de la sección que contiene la tarjeta
+  const sec=card.closest(".section");
+  const cat=(CARD_DATA[id] && CARD_DATA[id].cat) || (sec && sec.id);
+  const navBtn=document.querySelector('#nav button[data-tab="'+cat+'"]');
   if(navBtn) navBtn.click();   // limpia la búsqueda global y muestra la sección
-  requestAnimationFrame(()=>{
-    const card=document.getElementById(id);
-    if(!card) return;
+  // doble rAF: espera a que la sección esté visible y con layout antes de hacer scroll
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
     card.scrollIntoView({behavior:"smooth",block:"center"});
     card.classList.remove("focus-pulse"); void card.offsetWidth; card.classList.add("focus-pulse");
-  });
+  }));
 }
 // Regex de frases (con acentos) para detectar nombres de unidad en texto libre del chat.
 let LINK_RE=null;
@@ -1936,7 +1984,10 @@ function selectTier(cardId, idx){
   document.getElementById(`${cardId}-ctr`).innerHTML = buildCountersHtml(strong, weak);
 }
 
-function fillGrid(id,data){ document.getElementById(id).innerHTML=data.map(u=>buildCard(u)).join(""); }
+function fillGrid(id,data){
+  const cat=id.replace("-grid","");   // infantry-grid → infantry (necesario para focusUnit)
+  document.getElementById(id).innerHTML=data.map(u=>buildCard({...u,cat})).join("");
+}
 
 function fillAnimals(){
   const labels={herd:"🐑 Pastoreables",hunt:"🏹 Cazables — Comestibles",inedible:"⚠ Cazables — No Comestibles"};
