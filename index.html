@@ -837,6 +837,24 @@ const infantry = [
     ],
     strong:["Infantería","Caballería (sangrado)","Línea Milicia","Edificios","Elefantes (con Armadura Laminar)"],
     weak:  ["Arqueros","Ballesteros","Artillero de Mano","Arqueros de Caballería","Hostigadores","Escorpiones"]},
+
+  { name:"Guardia de la Pluma Blanca", civ:"Shu", img:"",
+    units:[
+      {name:"Guardia de la Pluma Blanca",       hp:60, atk:11, arm:2, pie:2, spd:"Media", cost:"55A 25O"},
+      {name:"Guardia de la Pluma Blanca Élite", hp:75, atk:13, arm:3, pie:3, spd:"Media", cost:"55A 25O"},
+    ],
+    note:"UU de Shu: su ataque ralentiza a los enemigos; gana HP al estar cerca de Lanceros (Formación Serpiente Enroscada)",
+    strong:["Caballería","Infantería","Unidades que huyen (las frena)","Línea Milicia"],
+    weak:  ["Arqueros","Hostigadores","Mangonales","Escorpiones"]},
+
+  { name:"Espadachín Jian", civ:"Wu", img:"Jian_Swordsman_strong_AoE2.webp",
+    units:[
+      {name:"Espadachín Jian",       hp:60, atk:11, arm:4, pie:4, spd:"Media", cost:"55A 25O"},
+      {name:"Espadachín Jian Élite", hp:75, atk:13, arm:5, pie:5, spd:"Media", cost:"55A 25O"},
+    ],
+    note:"UU de Wu: el escudo le da mucha armadura hasta que se rompe; al perderlo gana ataque y velocidad pero pierde armadura",
+    strong:["Arqueros (con escudo)","Infantería","Línea Milicia","Edificios"],
+    weak:  ["Piqueros","Mangonales","Escorpiones","Monjes"]},
 ];
 
 // ═══════ CABALLERÍA ═══════
@@ -1052,6 +1070,24 @@ const cavalry = [
     ],
     strong:["Pólvora (Artillero de Mano, Jenízaro)","Unidades heridas","Arqueros","Hostigadores","Asedio"],
     weak:  ["Piqueros","Alabarderos","Camellos","Monjes","Caballería con bonos"]},
+
+  { name:"Caballería de Tigre", civ:"Wei", img:"",
+    units:[
+      {name:"Caballería de Tigre",       hp:110, atk:12, arm:2, pie:2, spd:"Rápida", cost:"70A 80O"},
+      {name:"Caballería de Tigre Élite", hp:140, atk:14, arm:3, pie:2, spd:"Rápida", cost:"70A 80O"},
+    ],
+    note:"UU de Wei: sube de nivel al matar enemigos, ganando hasta +4 de ataque y +40 HP",
+    strong:["Arqueros","Infantería","Hostigadores","Asedio","Unidades sueltas"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes"]},
+
+  { name:"Caballería Hei Guang", civ:"Wei", img:"Heavy_Hei_Guang_Cavalry_AoE2.webp",
+    units:[
+      {name:"Caballería Hei Guang",        hp:130, atk:12, arm:2, pie:2, spd:"Rápida", cost:"60A 75O"},
+      {name:"Caballería Hei Guang Pesada", hp:150, atk:14, arm:2, pie:3, spd:"Rápida", cost:"60A 75O"},
+    ],
+    note:"Reemplaza al Caballero en Wei (regional de Los Tres Reinos); +2 de ataque contra asedio",
+    strong:["Arqueros","Asedio (bono)","Infantería","Monjes"],
+    weak:  ["Piqueros","Alabarderos","Camellos","Monjes (conversión)"]},
 ];
 
 // ═══════ ARQUEROS ═══════
@@ -1278,6 +1314,24 @@ const archers = [
     ],
     strong:["Infantería","Línea Milicia","Piqueros","Aldeanos","Unidades de poca armadura perforante"],
     weak:  ["Hostigadores","Mangonales","Caballería","Arqueros de Caballería","Daño de área"]},
+
+  { name:"Asaltante Xianbei", civ:"Wei", img:"Xianbei_Raider_AoE2.webp",
+    units:[
+      {name:"Asaltante Xianbei",       hp:60, atk:7, arm:0, pie:0, spd:"Rápida", cost:"40M 60O"},
+      {name:"Asaltante Xianbei Élite", hp:70, atk:8, arm:1, pie:0, spd:"Rápida", cost:"40M 60O"},
+    ],
+    note:"UU de Wei: arquero de caballería que dispara ráfagas de flechas sobre las filas enemigas; +20/30% HP en Castillo/Imperial",
+    strong:["Infantería","Grupos de unidades","Hostigadores","Arqueros a pie"],
+    weak:  ["Hostigadores","Camellos","Caballería con bonos","Mangonales"]},
+
+  { name:"Arquero de Fuego", civ:"Wu", img:"",
+    units:[
+      {name:"Arquero de Fuego",       hp:50, atk:6, arm:0, pie:0, spd:"Media", cost:"40M 35O"},
+      {name:"Arquero de Fuego Élite", hp:60, atk:7, arm:0, pie:0, spd:"Media", cost:"40M 35O"},
+    ],
+    note:"UU de Wu: cambia de modo solo; alcance muy largo y daño alto contra barcos y edificios (anti-naval / anti-asedio)",
+    strong:["Edificios","Barcos","Asedio","Torres y Castillos"],
+    weak:  ["Caballería","Infantería","Hostigadores","Mangonales"]},
 ];
 
 // ═══════ ASEDIO ═══════
@@ -1360,6 +1414,15 @@ const siege = [
     ],
     strong:["Edificios","Unidades agrupadas","Infantería lenta","Asedio"],
     weak:  ["Caballería rápida","Arqueros de Caballería","Unidades dispersas","Mangudais"]},
+
+  { name:"Carro de Guerra", civ:"Shu", img:"War_Chariot_AoE2.webp",
+    units:[
+      {name:"Carro de Guerra",       hp:120, atk:8,  arm:0, pie:2, spd:"Rápida", cost:"80A 40O"},
+      {name:"Carro de Guerra Élite", hp:140, atk:10, arm:0, pie:3, spd:"Rápida", cost:"80A 40O"},
+    ],
+    note:"UU de Shu: dispara ráfagas de virotes con una ballesta de repetición; hace de Escorpión móvil. Con Cargador de Virotes dispara proyectiles extra",
+    strong:["Infantería","Unidades agrupadas","Arqueros a pie","Aldeanos"],
+    weak:  ["Hostigadores","Mangonales","Caballería","Daño de área"]},
 ];
 
 // ═══════ NAVAL ═══════
@@ -1438,6 +1501,12 @@ const naval = [
     note:"Buque insignia — barco más poderoso del juego",
     strong:["La mayoría de barcos","Melee en orilla","Edificios en orilla"],
     weak:  ["Barcos Explosivos (massed)","Cañones de Bombardeo","Torres masivas"]},
+
+  { name:"Lou Chuan", civ:"Wu", img:"Lou_Chuan_AoE2.webp",
+    units:[{name:"Lou Chuan", hp:160, atk:9, arm:0, pie:6, spd:"Lenta", cost:"110M 120O"}],
+    note:"Barco torre regional de las civs de China / Los Tres Reinos: dispara varios proyectiles a la vez; fuerte contra barcos y edificios costeros",
+    strong:["Barcos","Edificios costeros","Grupos de unidades en la orilla"],
+    weak:  ["Barcos Explosivos","Cañones de Bombardeo","Galeras masivas"]},
 ];
 
 // ═══════ ANIMALES ═══════
