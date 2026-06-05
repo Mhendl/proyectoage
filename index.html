@@ -595,6 +595,7 @@ const CIV_IMGS = {
   "Birmanos":"Burmese_AoE2.webp","Malayos":"Malay_AoE2.webp","Georgianos":"Georgians_AoE2.webp",
   "Lituanos":"Lithuanians_AoE2.webp","Polacos":"Poles_AoE2.webp","Tártaros":"Tatars_AoE2.webp",
   "Romanos":"Romans_AoE2.webp","SE Asia":"Khmer_AoE2.webp",
+  "Wei":"Wei_AoE2.webp","Shu":"Shu_AoE2.webp","Wu":"Wu_AoE2.webp",
 };
 
 // ═══════ INFANTERÍA ═══════
@@ -1734,6 +1735,33 @@ const CIVS = [
    ut:["Caciques (Castillo): línea Champi y Honderos atacan 25% más rápido",
      "Curare (Imperial): arqueros a pie y fortificaciones causan daño de veneno"],
    lacks:["Pólvora / Bombarderos (civ del nuevo mundo)"]},
+  {name:"Wei", focus:"Caballería · Incursión (Tres Reinos)", img:"Wei_AoE2.webp",
+   bonus:["Civilización heroica del modo Tres Reinos (Cao Cao)",
+     "Especializada en caballería de choque y movilidad para incursiones",
+     "Lanceros de Fuego (Fire Lancers): caballería que causa daño explosivo en área",
+     "Caballería de Tigre como fuerza de élite"],
+   team:"Caballería de aliados +línea de visión",
+   uu:["Lancero de Fuego","Caballería de Tigre"],
+   ut:["Tecnologías heroicas propias del modo Tres Reinos"],
+   lacks:["Datos sujetos a balance (modo Tres Reinos, mecánicas heroicas únicas)"]},
+  {name:"Shu", focus:"Infantería · Defensa (Tres Reinos)", img:"Shu_AoE2.webp",
+   bonus:["Civilización heroica del modo Tres Reinos (Liu Bei)",
+     "Especializada en infantería resistente y juego defensivo",
+     "Héroes como Guan Yu y Zhang Fei refuerzan al ejército",
+     "Economía y aldeanos reforzados para sostener asedios largos"],
+   team:"Infantería de aliados +armadura",
+   uu:["Lancero de Fuego","Guardia heroica"],
+   ut:["Tecnologías heroicas propias del modo Tres Reinos"],
+   lacks:["Datos sujetos a balance (modo Tres Reinos, mecánicas heroicas únicas)"]},
+  {name:"Wu", focus:"Naval · Arqueros (Tres Reinos)", img:"Wu_AoE2.webp",
+   bonus:["Civilización heroica del modo Tres Reinos (Sun Quan)",
+     "Especializada en poder naval y arqueros",
+     "Domina el combate en ríos y costas con barcos mejorados",
+     "Lanceros de Fuego disponibles como caballería de apoyo"],
+   team:"Barcos de aliados +línea de visión",
+   uu:["Lancero de Fuego","Barco de guerra heroico"],
+   ut:["Tecnologías heroicas propias del modo Tres Reinos"],
+   lacks:["Datos sujetos a balance (modo Tres Reinos, mecánicas heroicas únicas)"]},
 ];
 
 const ALL_UNITS = [
@@ -2005,8 +2033,13 @@ function fillAnimals(){
 }
 
 // ═══════ BÚSQUEDA GLOBAL ═══════
+// Normaliza para buscar: minúsculas y sin acentos, así "husar" encuentra "húsar".
+function searchNorm(s){
+  return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+}
 function globalSearch(q){
-  q=q.trim().toLowerCase();
+  const raw=q.trim();
+  q=searchNorm(raw);
   const sr=document.getElementById("search-results");
   const info=document.getElementById("gsb-info");
   const tabs=document.querySelectorAll(".section");
@@ -2017,11 +2050,11 @@ function globalSearch(q){
   }
   tabs.forEach(s=>s.style.display="none");
   sr.style.display="block";
-  const results=ALL_UNITS.filter(u=>[u.name,u.civ,...u.units.map(x=>x.name)].filter(Boolean).join(" ").toLowerCase().includes(q));
-  const civResults=CIVS.filter(c=>[c.name,c.focus,...(c.uu||[])].join(" ").toLowerCase().includes(q));
+  const results=ALL_UNITS.filter(u=>searchNorm([u.name,u.civ,...u.units.map(x=>x.name)].filter(Boolean).join(" ")).includes(q));
+  const civResults=CIVS.filter(c=>searchNorm([c.name,c.focus,...(c.uu||[])].join(" ")).includes(q));
   const total=results.length+civResults.length;
   if(!total){
-    sr.innerHTML=`<div class="sr-empty">Sin resultados para «<strong>${q}</strong>»</div>`;
+    sr.innerHTML=`<div class="sr-empty">Sin resultados para «<strong>${raw}</strong>»</div>`;
     info.textContent="Sin resultados"; return;
   }
   info.textContent=`${total} resultado${total!==1?"s":""} en todas las pestañas`;
